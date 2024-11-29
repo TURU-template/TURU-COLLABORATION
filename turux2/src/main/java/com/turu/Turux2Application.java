@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class Turux2Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Turux2Application.class, args);
-		System.out.println("WOIIII Iqbal Rasyid Gantengsadsd");
+		System.out.println("Kok kamu gitu sih bal");
 	}
 
 }
