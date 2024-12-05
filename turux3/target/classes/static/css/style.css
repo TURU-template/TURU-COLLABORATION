@@ -47,7 +47,7 @@ body {
     max-width: 480px;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 8px 24px;
     background-color: var(--header-bg-opacity);
     color: var(--text-color);
     font-size: 1rem;
@@ -65,6 +65,13 @@ body {
     border-radius: 16px 16px 24px 24px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+}
+
+.canvas-mobile.radio{
+    background-image: url("../asset/BGRadio.svg");
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
 }
 
 .content {

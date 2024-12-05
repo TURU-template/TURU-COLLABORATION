@@ -26,7 +26,7 @@ function generateRandomDots() {
     for (let i = 0; i < dotCount; i++) {
         const dot = document.createElement('div');
         dot.className = 'dot';
-        dot.style.width = `${Math.random() * 5 + 2}px`; // Random size
+        dot.style.width = `${Math.random() * 5 + 4}px`; // Random size
         dot.style.height = dot.style.width;
         dot.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         dot.style.top = `${Math.random() * viewportHeight}px`; // Confined to viewport height

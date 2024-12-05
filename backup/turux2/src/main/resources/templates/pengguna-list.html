@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pengguna List</title>
+</head>
+<body>
+    <h2>All Pengguna</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Jenis Kelamin</th>
+            <th>Tanggal Lahir</th>
+        </tr>
+        <tr th:each="pengguna : ${penggunaList}">
+            <td th:text="${pengguna.idAnggota}"></td>
+            <td th:text="${pengguna.username}"></td>
+            <td th:text="${pengguna.jk}"></td>
+            <td th:text="${pengguna.tanggalLahir}"></td>
+        </tr>
+    </table>
+</body>
+</html>
