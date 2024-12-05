@@ -27,7 +27,12 @@ public class PenggunaController {
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("pengguna", new Pengguna());
-        return "register-pengguna";
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        return "login";
     }
 
     @PostMapping("/register")

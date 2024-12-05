@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class Turux3Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Turux3Application.class, args);
-		System.out.println("[🟢] Starting: TURU - Aplikasi Monitoring Tidur 🤤");
+		System.out.println("[*] Starting: TURU - Aplikasi Monitoring Tidur zZzZ.....");
 	}
-
 }
