@@ -185,6 +185,59 @@ body.login {
     margin-top: 20px;
 }
 
+/*========== RADIO ==========*/
+/* Base styles for the custom button */
+.song-btn {
+    color: gray;
+    background: whitesmoke;
+    border-width: 3px;
+    border-radius: 8px;
+    font-weight: 500;
+    border-style: solid;
+    position: relative;
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* Clicked/active state */
+.song-btn.clicked {
+    color: white;
+    background: currentColor; /* Matches the border color */
+}
+
+/* Offset border effect (shadow-like border behind the button) */
+.song-btn.clicked::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 10px; /* Slightly larger to match the offset */
+    border: 3px solid currentColor; /* Same color as the button */
+    z-index: -1; /* Ensures it is behind the button */
+}
+
+/* Button active shadow effect */
+/* button.active {
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+button.active::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 8px;
+    border: 3px solid currentColor;
+    z-index: -1;
+    opacity: 0.8;
+} */
+
+
 /*========== LOGIN/REGISTER ==========*/
 .submit-btn {
     width: 100%;

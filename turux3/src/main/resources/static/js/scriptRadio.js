@@ -8,38 +8,45 @@ const soundSources = {
     ice: "https://www.soundjay.com/nature/sounds/ice-collecting-01.mp3",
     zipper: "https://www.soundjay.com/cloth/sounds/jacket-zipper-3.mp3",
     fire: "https://cdn.freesound.org/previews/499/499032_10791958-lq.mp3",
+     white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
     brown: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3",
     blue: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3",
     pink: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3",
     bird: "https://www.freesoundslibrary.com/wp-content/uploads/2018/02/birds-chirping-sound-effect.mp3",
-    jangkrik: "https://www.freesoundslibrary.com/wp-content/uploads/2022/11/crickets-chirping-sounds-of-night.mp3",
+    jangkrik: "../asset/songs/Cicada.mp3",
     twilight: "https://audio.jukehost.co.uk/api/external/download/0t0DjzJIiWeYJz7LNdS0VBZY609YLqrm.mp3",
     monoman: "https://archive.org/download/monoman_202302/Monoman.mp3",
-    yasumu: "https://archive.org/download/Yasumu/Yasumu.mp3",
-    white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3"
+    yasumu: "https://archive.org/download/Yasumu/Yasumu.mp3"
 };
 
 // Ensure audio loops
 audioElement.loop = true;
 
-// Function to play or toggle audio
+// Function to toggle audio and update button styles
 function toggleAudio(soundKey) {
+    const button = document.getElementById(`${soundKey}-btn`);
+
     if (currentTrackKey === soundKey) {
         // Pause if the same button is clicked
         audioElement.pause();
-        setActiveButton(currentTrackKey, false);
+        setButtonState(button, false);
         currentTrackKey = null;
         savePlaybackState(null);
     } else {
         // Play the selected audio
-        audioElement.src = soundSources[soundKey];
-        audioElement.play();
-        savePlaybackState(soundKey);
+        if (soundSources[soundKey]) {
+            audioElement.src = soundSources[soundKey];
+            audioElement.play();
+            savePlaybackState(soundKey);
 
-        // Update button states
-        if (currentTrackKey) setActiveButton(currentTrackKey, false); // Reset the previous button
-        setActiveButton(soundKey, true);
-        currentTrackKey = soundKey;
+            // Update button states
+            if (currentTrackKey) {
+                const previousButton = document.getElementById(`${currentTrackKey}-btn`);
+                setButtonState(previousButton, false);
+            }
+            setButtonState(button, true);
+            currentTrackKey = soundKey;
+        }
     }
 }
 
@@ -51,11 +58,11 @@ function restorePlaybackState() {
         audioElement.src = soundSources[currentTrackKey];
         audioElement.currentTime = playbackState.currentTime || 0;
         audioElement.play();
-        setActiveButton(currentTrackKey, true);
+        setButtonState(document.getElementById(`${currentTrackKey}-btn`), true);
     }
 }
 
-// Save playback state before navigating away
+// Save playback state
 function savePlaybackState(soundKey) {
     const playbackState = {
         soundKey: currentTrackKey,
@@ -65,16 +72,19 @@ function savePlaybackState(soundKey) {
 }
 
 
-// Update button states
-function setActiveButton(soundKey, isActive) {
-    const button = document.getElementById(`${soundKey}-btn`);
+// Update button states with dynamic color styling
+function setButtonState(button, isActive) {
     if (button) {
         if (isActive) {
-            button.classList.remove("btn-outline");
-            button.classList.add(`btn-${getButtonColor(soundKey)}`);
+            button.style.color = "white";
+            button.style.background = getComputedStyle(document.documentElement).getPropertyValue(
+                `--${button.dataset.color}`
+            );
+            button.classList.add("active");
         } else {
-            button.classList.add("btn-outline");
-            button.classList.remove(`btn-${getButtonColor(soundKey)}`);
+            button.style.color = "gray";
+            button.style.background = "whitesmoke";
+            button.classList.remove("active");
         }
     }
 }
