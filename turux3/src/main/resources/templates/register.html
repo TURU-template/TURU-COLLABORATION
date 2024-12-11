@@ -2,9 +2,16 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registrasi Pengguna</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body class="min-h-screen bg-[#080821] flex items-center justify-center p-4 login">
   <div class="w-full max-w-md space-y-8">
@@ -13,29 +20,33 @@
         Registrasi Pengguna
       </h2>
 
-      <form class="space-y-4" action="/register" method="post">
+      <form id="formId" class="space-y-4" action="/register" method="post">
         <!-- Username -->
         <div class="relative">
           <input
             type="text"
+            id="username"
             name="username"
             placeholder="Masukkan Username"
-            required
             class="w-full px-4 py-3 bg-white rounded-lg pl-10"
+            required
           />
           <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
+          <div id="usernameError" class="error"></div>
         </div>
 
         <!-- Password -->
         <div class="relative">
           <input
             type="password"
+            id="password"
             name="password"
             placeholder="Masukkan Kata Sandi"
-            required
             class="w-full px-4 py-3 bg-white rounded-lg pl-10"
+            required
           />
           <span class="absolute left-3 top-3.5 text-gray-400">🔑</span>
+          <div id="passwordError" class="error"></div>
         </div>
 
         <!-- Tanggal Lahir -->
@@ -44,15 +55,14 @@
             type="date"
             name="tanggalLahir"
             placeholder="Masukkan Tanggal Lahir"
-            required
             class="w-full px-4 py-3 bg-white rounded-lg pl-10"
+            required
           />
           <span class="absolute left-3 top-3.5 text-gray-400">📅</span>
         </div>
 
         <!-- Jenis Kelamin -->
         <div class="grid grid-cols-2 gap-4">
-          <!-- Laki-laki -->
           <button
             type="button"
             class="flex items-center py-3 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-blue-200 transition-colors"
@@ -63,7 +73,6 @@
             <span class="ml-3">Laki-laki</span>
           </button>
 
-          <!-- Perempuan -->
           <button
             type="button"
             class="flex items-center py-3 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-pink-200 transition-colors"
@@ -78,42 +87,69 @@
         <!-- Hidden Radio Buttons for Form Submission -->
         <input type="radio" name="jk" value="L" id="gender-male" class="hidden" required>
         <input type="radio" name="jk" value="P" id="gender-female" class="hidden" required>
+        <div id="genderError" class="error"></div>
 
         <!-- Submit Button -->
-        <button type="submit" class="submit-btn">Register</button>
-        <a type="button" class="switch-btn" th:href="@{/login}">Sudah Punya Akun</a>
+        <button type="submit" class="w-full py-3 bg-indigo-600 text-white rounded-lg">Register</button>
       </form>
     </div>
   </div>
 
   <script>
-    let selectedGender = '';
-
     function selectGender(gender) {
-      selectedGender = gender;
-
-      // Update button styles based on selection
       const maleButton = document.getElementById('male-button');
       const femaleButton = document.getElementById('female-button');
       const genderMaleInput = document.getElementById('gender-male');
       const genderFemaleInput = document.getElementById('gender-female');
 
       if (gender === 'L') {
-        maleButton.classList.remove('bg-gray-200', 'text-gray-800');
         maleButton.classList.add('bg-blue-500', 'text-white');
         femaleButton.classList.remove('bg-pink-500', 'text-white');
-        femaleButton.classList.add('bg-gray-200', 'text-gray-800');
         genderMaleInput.checked = true;
         genderFemaleInput.checked = false;
       } else if (gender === 'P') {
-        femaleButton.classList.remove('bg-gray-200', 'text-gray-800');
         femaleButton.classList.add('bg-pink-500', 'text-white');
         maleButton.classList.remove('bg-blue-500', 'text-white');
-        maleButton.classList.add('bg-gray-200', 'text-gray-800');
         genderFemaleInput.checked = true;
         genderMaleInput.checked = false;
       }
     }
+
+    document.getElementById('formId').addEventListener('submit', function (event) {
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const genderMale = document.getElementById('gender-male');
+      const genderFemale = document.getElementById('gender-female');
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+      const genderError = document.getElementById('genderError');
+
+      let isValid = true;
+
+      usernameError.textContent = '';
+      passwordError.textContent = '';
+      genderError.textContent = '';
+
+      
+      if (username.value.trim() === '' && username.value.includes(' ')) {
+        usernameError.textContent = 'Username tidak boleh kosong atau mengandung spasi.';
+        isValid = false;
+      }
+
+      if (password.value.length < 4) {
+        passwordError.textContent = 'Password minimal 4 karakter.';
+        isValid = false;
+      }
+
+      if (!genderMale.checked && !genderFemale.checked) {
+        genderError.textContent = 'Pilih jenis kelamin.';
+        isValid = false;
+      }
+
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
   </script>
 </body>
 </html>
