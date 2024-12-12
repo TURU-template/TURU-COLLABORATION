@@ -1,16 +1,22 @@
 package com.turu.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import jakarta.persistence.*;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
 public class Pengguna {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAnggota;
     private String username;
     private String password;
     private String jk;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date tanggalLahir;
+    private LocalDate tanggalLahir;
 
     // Getters and Setters
     public int getIdAnggota() {
@@ -45,11 +51,11 @@ public class Pengguna {
         this.jk = jk;
     }
 
-    public Date getTanggalLahir() {
+    public LocalDate getTanggalLahir() {
         return tanggalLahir;
     }
 
-    public void setTanggalLahir(Date tanggalLahir) {
+    public void setTanggalLahir(LocalDate tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
 }
