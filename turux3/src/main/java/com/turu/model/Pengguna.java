@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Pengguna {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAnggota;
+    private int id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -31,12 +31,12 @@ public class Pengguna {
     private Statistik statistik;
 
 
-    public int getIdAnggota() {
-        return idAnggota;
+    public int getId() {
+        return id;
     }
 
-    public void setIdAnggota(int idAnggota) {
-        this.idAnggota = idAnggota;
+    public void setId(int idAnggota) {
+        this.id = idAnggota;
     }
 
     public String getUsername() {

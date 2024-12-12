@@ -7,113 +7,41 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body class="min-h-screen bg-[#080821] flex items-center justify-center p-4 login">
-  <div class="w-full max-w-md space-y-8">
-    <div class="bg-[#080821] p-8 rounded-lg border border-indigo-900">
-      <h2 id="form-title" class="text-2xl font-bold text-white mb-8 text-center">
-        Login Pengguna
-      </h2>
+<div class="w-full max-w-md space-y-8">
+  <div class="bg-[#080821] p-8 rounded-lg border border-indigo-900">
+    <h2 id="form-title" class="text-2xl font-bold text-white mb-8 text-center">
+      Login Pengguna
+    </h2>
 
-      <form class="space-y-4" action="/register" method="post">
-        <!-- Username -->
-        <div class="relative">
-          <input
-            type="text"
-            name="username"
-            placeholder="Masukkan Username"
-            required
-            class="w-full px-4 py-3 bg-white rounded-lg pl-10"
-          />
-          <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
-        </div>
+    <form class="space-y-4" action="/login" method="post">
+      <!-- Username -->
+      <div class="relative">
+        <input
+                type="text"
+                name="username"
+                placeholder="Masukkan Username"
+                required
+                class="w-full px-4 py-3 bg-white rounded-lg pl-10"
+        />
+        <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
+      </div>
 
-        <!-- Password -->
-        <div class="relative">
-          <input
-            type="password"
-            name="password"
-            placeholder="Masukkan Kata Sandi"
-            required
-            class="w-full px-4 py-3 bg-white rounded-lg pl-10"
-          />
-          <span class="absolute left-3 top-3.5 text-gray-400">🔑</span>
-        </div>
+      <!-- Password -->
+      <div class="relative">
+        <input
+                type="password"
+                name="password"
+                placeholder="Masukkan Kata Sandi"
+                required
+                class="w-full px-4 py-3 bg-white rounded-lg pl-10"
+        />
+        <span class="absolute left-3 top-3.5 text-gray-400">🔑</span>
+      </div>
 
-        <!-- Tanggal Lahir -->
-        <div class="relative">
-          <input
-            type="date"
-            name="tanggalLahir"
-            placeholder="Masukkan Tanggal Lahir"
-            required
-            class="w-full px-4 py-3 bg-white rounded-lg pl-10"
-          />
-          <span class="absolute left-3 top-3.5 text-gray-400">📅</span>
-        </div>
-
-        <!-- Jenis Kelamin -->
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Laki-laki -->
-          <button
-            type="button"
-            class="flex items-center py-3 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-blue-200 transition-colors"
-            id="male-button"
-            onclick="selectGender('L')"
-          >
-            <span class="ml-3">♂️</span>
-            <span class="ml-3">Laki-laki</span>
-          </button>
-
-          <!-- Perempuan -->
-          <button
-            type="button"
-            class="flex items-center py-3 px-4 rounded-lg bg-gray-200 text-gray-800 hover:bg-pink-200 transition-colors"
-            id="female-button"
-            onclick="selectGender('P')"
-          >
-            <span class="ml-3">♀️</span>
-            <span class="ml-3">Perempuan</span>
-          </button>
-        </div>
-
-        <!-- Hidden Radio Buttons for Form Submission -->
-        <input type="radio" name="jk" value="L" id="gender-male" class="hidden" required>
-        <input type="radio" name="jk" value="P" id="gender-female" class="hidden" required>
-
-        <!-- Submit Button -->
-        <button type="submit" class="submit-btn">Login</button>
-        <a type="button" class="switch-btn" th:href="@{/register}">Belum Punya Akun</a>
-      </form>
-    </div>
+      <button type="submit" class="submit-btn">Login</button>
+      <a type="button" class="switch-btn" th:href="@{/register}">Belum Punya Akun</a>
+    </form>
   </div>
-
-  <script>
-    let selectedGender = '';
-
-    function selectGender(gender) {
-      selectedGender = gender;
-
-      // Update button styles based on selection
-      const maleButton = document.getElementById('male-button');
-      const femaleButton = document.getElementById('female-button');
-      const genderMaleInput = document.getElementById('gender-male');
-      const genderFemaleInput = document.getElementById('gender-female');
-
-      if (gender === 'L') {
-        maleButton.classList.remove('bg-gray-200', 'text-gray-800');
-        maleButton.classList.add('bg-blue-500', 'text-white');
-        femaleButton.classList.remove('bg-pink-500', 'text-white');
-        femaleButton.classList.add('bg-gray-200', 'text-gray-800');
-        genderMaleInput.checked = true;
-        genderFemaleInput.checked = false;
-      } else if (gender === 'P') {
-        femaleButton.classList.remove('bg-gray-200', 'text-gray-800');
-        femaleButton.classList.add('bg-pink-500', 'text-white');
-        maleButton.classList.remove('bg-blue-500', 'text-white');
-        maleButton.classList.add('bg-gray-200', 'text-gray-800');
-        genderFemaleInput.checked = true;
-        genderMaleInput.checked = false;
-      }
-    }
-  </script>
+</div>
 </body>
 </html>

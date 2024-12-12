@@ -31,13 +31,13 @@ public class PenggunaController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
+    public String showLoginPage() {
         return "login";
     }
 
     @PostMapping("/register")
     public String registerPengguna(@ModelAttribute Pengguna pengguna) {
         penggunaService.savePengguna(pengguna);
-        return "redirect:/";
+        return "redirect:/login";
     }
 }

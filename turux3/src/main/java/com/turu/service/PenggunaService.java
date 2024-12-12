@@ -2,6 +2,7 @@ package com.turu.service;
 
 import com.turu.model.Pengguna;
 import com.turu.repository.PenggunaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 public class PenggunaService {
 
     private final PenggunaRepository penggunaRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public PenggunaService(PenggunaRepository penggunaRepository) {
+    public PenggunaService(PenggunaRepository penggunaRepository, PasswordEncoder passwordEncoder) {
         this.penggunaRepository = penggunaRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Pengguna> getAllPengguna() {
@@ -29,7 +32,7 @@ public class PenggunaService {
         if (!isValidPassword(pengguna.getPassword())) {
             throw new IllegalArgumentException("Password harus memiliki panjang minimal 4 karakter.");
         }
-
+        pengguna.setPassword(passwordEncoder.encode(pengguna.getPassword()));
         penggunaRepository.save(pengguna);
     }
 
