@@ -1,24 +1,36 @@
 package com.turu.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 public class Pengguna {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAnggota;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
     private String jk;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate tanggalLahir;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "pengguna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DataTidur> dataTidurList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "pengguna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Statistik statistik;
+
+
     public int getIdAnggota() {
         return idAnggota;
     }
@@ -58,4 +70,14 @@ public class Pengguna {
     public void setTanggalLahir(LocalDate tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
+
+    public List<DataTidur> getDataTidurList() {
+        return dataTidurList;
+    }
+
+    public void setDataTidurList(List<DataTidur> dataTidurList) {
+        this.dataTidurList = dataTidurList;
+    }
 }
+
+

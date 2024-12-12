@@ -3,23 +3,25 @@ package com.turu.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
-
+@Entity
+@Table(name = "statistik")
 public class Statistik {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "week", nullable = false)
-    private Date week;
+    private LocalDate week;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "statistik_id")
+    @OneToOne
+    @JoinColumn(name = "pengguna_id", nullable = false)
+    private Pengguna pengguna;
+
+    @OneToMany(mappedBy = "statistik", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DataTidur> data;
 
     public Statistik() {
@@ -34,11 +36,11 @@ public class Statistik {
         this.id = id;
     }
 
-    public Date getWeek() {
+    public LocalDate getWeek() {
         return week;
     }
 
-    public void setWeek(Date week) {
+    public void setWeek(LocalDate week) {
         this.week = week;
     }
 

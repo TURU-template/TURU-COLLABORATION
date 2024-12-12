@@ -2,19 +2,26 @@ package com.turu.model;
 
 import jakarta.persistence.*;
 import java.time.*;
-
 @Entity
 @Table(name = "data_tidur")
 public class DataTidur {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDateTime waktuMulai;
     private LocalDateTime waktuSelesai;
     private LocalDate tanggal;
     private LocalTime durasi;
     private int skor;
+
+    @ManyToOne
+    @JoinColumn(name = "pengguna_id", nullable = false)
+    private Pengguna pengguna;
+
+    @ManyToOne
+    @JoinColumn(name = "statistik_id")
+    private Statistik statistik;
 
     public Long getId() {
         return id;
@@ -62,6 +69,13 @@ public class DataTidur {
 
     public void setSkor(int skor) {
         this.skor = skor;
+    }
+    public Statistik getStatistik() {
+        return statistik;
+    }
+
+    public void setStatistik(Statistik statistik) {
+        this.statistik = statistik;
     }
 
     public void hitungDurasi() {
