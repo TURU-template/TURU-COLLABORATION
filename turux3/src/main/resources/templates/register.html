@@ -131,7 +131,7 @@
       genderError.textContent = '';
       console.log(username)
       
-      if (username.value.trim() === '' && username.value.includes(' ')) {
+      if (username.value.trim() === '' || username.value.includes(' ')) {
         usernameError.textContent = 'Username tidak boleh kosong atau mengandung spasi.';
         isValid = false;
       }
