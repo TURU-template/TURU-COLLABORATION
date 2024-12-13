@@ -5,18 +5,19 @@ let currentTrackKey = null; // Keeps track of the currently playing sound
 
 // Define all audio sources
 const soundSources = {
-    ice: "https://www.soundjay.com/nature/sounds/ice-collecting-01.mp3",
-    zipper: "https://www.soundjay.com/cloth/sounds/jacket-zipper-3.mp3",
-    fire: "https://cdn.freesound.org/previews/499/499032_10791958-lq.mp3",
-     white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
+    white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
     brown: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3",
     blue: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3",
     pink: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3",
-    bird: "https://www.freesoundslibrary.com/wp-content/uploads/2018/02/birds-chirping-sound-effect.mp3",
-    jangkrik: "../asset/songs/Cicada.mp3",
-    twilight: "https://audio.jukehost.co.uk/api/external/download/0t0DjzJIiWeYJz7LNdS0VBZY609YLqrm.mp3",
-    monoman: "https://archive.org/download/monoman_202302/Monoman.mp3",
-    yasumu: "https://archive.org/download/Yasumu/Yasumu.mp3"
+   
+    jangkrik: "../asset/songs/Jangkrik.mp3",
+    ombak: "../asset/songs/Ombak.mp3",
+    api: "../asset/songs/Api.mp3",
+    burung: "../asset/songs/burung.mp3",
+    
+    twilight: "../asset/songs/twilight.mp3",
+    monoman: "../asset/songs/Monoman.mp3",
+    yasumu: "../asset/songs/Yasumu.mp3"
 };
 
 // Ensure audio loops
@@ -89,29 +90,43 @@ function setButtonState(button, isActive) {
     }
 }
 
-// Get button color based on sound key
-function getButtonColor(soundKey) {
-    return {
-        white: "primary",
-        brown: "secondary",
-        pink: "danger",
-        blue: "info",
-        fire: "warning",
-        ice: "success",
-        bird: "success",
-        twilight: "info",
-        monoman: "secondary",
-        yasumu: "primary"
-    }[soundKey];
-}
 
 // Add event listener for page unload (for saving state)
 window.onbeforeunload = () => savePlaybackState(currentTrackKey);
 
-// Restore playback state on page load
-window.onload = restorePlaybackState;
+// Set default button styles on page load
+function initializeButtons() {
+    const buttons = document.querySelectorAll('.song-btn');
+    buttons.forEach((button) => {
+        const colorVar = `--${button.dataset.color}`;
+        const borderColor = getComputedStyle(document.documentElement).getPropertyValue(colorVar);
+        button.style.setProperty('--button-border-color', borderColor);
+    });
+}
 
-// // Save state before leaving the page
-// window.onbeforeunload = () => {
-//     savePlaybackState(currentTrackKey);
-// };
+// Handle hover effect
+function handleHover(button, isHovered) {
+    const colorVar = `--${button.dataset.color}`;
+    const hoverColor = getComputedStyle(document.documentElement).getPropertyValue(colorVar);
+    if (isHovered) {
+        button.style.setProperty('--button-border-color', hoverColor);
+    } else {
+        button.style.setProperty('--button-border-color', hoverColor);
+    }
+}
+
+// Attach hover event listeners
+function attachHoverListeners() {
+    const buttons = document.querySelectorAll('.song-btn');
+    buttons.forEach((button) => {
+        button.addEventListener('mouseenter', () => handleHover(button, true));
+        button.addEventListener('mouseleave', () => handleHover(button, false));
+    });
+}
+
+// Initialize buttons and hover listeners on page load
+window.onload = () => {
+    initializeButtons();
+    attachHoverListeners();
+    restorePlaybackState(); // Restore audio state if needed
+};
