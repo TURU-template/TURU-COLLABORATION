@@ -1,24 +1,42 @@
 package com.turu.model;
 
-import java.util.Date;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.*;
+
+import org.springframework.format.annotation.DateTimeFormat;
+@Entity
 public class Pengguna {
-    private int idAnggota;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
     private String jk;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date tanggalLahir;
+    private LocalDate tanggalLahir;
 
-    // Getters and Setters
-    public int getIdAnggota() {
-        return idAnggota;
+    @OneToMany(mappedBy = "pengguna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DataTidur> dataTidurList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "pengguna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Statistik statistik;
+
+
+    public int getId() {
+        return id;
     }
 
-    public void setIdAnggota(int idAnggota) {
-        this.idAnggota = idAnggota;
+    public void setId(int idAnggota) {
+        this.id = idAnggota;
     }
 
     public String getUsername() {
@@ -45,11 +63,21 @@ public class Pengguna {
         this.jk = jk;
     }
 
-    public Date getTanggalLahir() {
+    public LocalDate getTanggalLahir() {
         return tanggalLahir;
     }
 
-    public void setTanggalLahir(Date tanggalLahir) {
+    public void setTanggalLahir(LocalDate tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
+
+    public List<DataTidur> getDataTidurList() {
+        return dataTidurList;
+    }
+
+    public void setDataTidurList(List<DataTidur> dataTidurList) {
+        this.dataTidurList = dataTidurList;
+    }
 }
+
+
