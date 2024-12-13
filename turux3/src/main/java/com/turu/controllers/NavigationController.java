@@ -34,12 +34,7 @@ public class NavigationController {
 		model.addAttribute("nama", "Iqbal ganteng");
 		return "radio.html"; //ini harus keluar, terus buka di folder Static
 	}
-	
-	
-	@GetMapping("/akun")
-	public String displayPageAku() {
-		return "profile.html"; //ini aksesnya langsung dr folder Templates
-	}
+
 	
 	
 	@GetMapping("/anggota")

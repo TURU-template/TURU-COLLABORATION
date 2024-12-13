@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,10 +129,11 @@
         <img src="Turu.ico" class="avatar-img">
       </div>
       <div class="profile-info">
-        <h1>Audrey Wony</h1>
-        <p>Perempuan</p>
-        <p>27/05/2004</p>
+        <h1 th:text="${pengguna.username}">Nama Pengguna</h1>
+        <p th:text="${pengguna.jk == 'L' ? 'Laki-laki' : 'Perempuan'}">Jenis Kelamin</p>
+        <p th:text="${pengguna.tanggalLahir}">Tanggal Lahir</p>
       </div>
+
     </div>
 
     <!-- Pengaturan -->

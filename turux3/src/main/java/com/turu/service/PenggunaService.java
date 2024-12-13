@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PenggunaService {
@@ -21,7 +22,9 @@ public class PenggunaService {
     public List<Pengguna> getAllPengguna() {
         return penggunaRepository.findAll();
     }
-
+    public Optional<Pengguna> findByUsername(String username) {
+        return penggunaRepository.findByUsername(username);
+    }
     public void savePengguna(Pengguna pengguna) {
         // Validasi username
         if (!isValidUsername(pengguna.getUsername())) {
