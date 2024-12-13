@@ -1,148 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="Turu.ico" type="image/x-icon" />
-    <!-- Logo/Icon Web -->
-    <title>🤤- Profil</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    />
-    <!-- Library CSS Bootstrap -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-    />
-    <!-- Icon Asset -->
-    <link rel="stylesheet" href="css/style.css" />
-    <!-- Style Utama -->
-    <style type="text/css">
-      /* Profil Section */
-      .profile {
-        text-align: center;
-        padding: 20px;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="Turu.ico" type="image/x-icon"> <!-- Logo/Icon Web -->
+  <title>🤤- Profil</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"> <!-- Library CSS Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> <!-- Icon Asset -->
+  <link rel="stylesheet" href="css/style.css"> <!-- Style Utama -->
+  <style>
+    
+  
 
-      .avatar {
-        margin-bottom: 15px;
-      }
+    /* Profil Section */
+    .profile {
+      text-align: center;
+      padding: 20px;
+    }
 
-      .avatar-img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        border: 2px solid #9b88ff;
-      }
+    .avatar {
+      margin-bottom: 15px;
+    }
 
-      .profile-info h1 {
-        font-size: 22px;
-        margin: 10px 0;
-        color: #ffffff;
-      }
+    .avatar-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid #9B88FF;
+    }
 
-      .profile-info p {
-        margin: 5px 0;
-        font-size: 16px;
-        color: #a0a0a0;
-      }
+    .profile-info h1 {
+      font-size: 22px;
+      margin: 10px 0;
+      color: #FFFFFF;
+    }
 
-      /* Pengaturan Section */
-      .settings {
-        margin: 20px;
-      }
+    .profile-info p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #A0A0A0;
+    }
 
-      .settings h2 {
-        margin-bottom: 15px;
-        font-size: 18px;
-        color: #ffffff;
-      }
+    /* Pengaturan Section */
+    .settings {
+      margin: 20px 32px;
+    }
 
-      .setting-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 0;
-        cursor: pointer;
-      }
+    .settings h2 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #FFFFFF;
+    }
 
-      .setting-item i {
-        font-size: 18px;
-        color: #ff88a0;
-      }
+    .setting-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      cursor: pointer;
+    }
 
-      .setting-item span {
-        font-size: 16px;
-        color: #ff88a0;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Profil -->
-    <div class="canvas-mobile">
-      <div class="profile" style="justify-items: center; text-align: center">
-        <div class="avatar">
-          <img src="Turu.ico" class="avatar-img" />
-        </div>
-        <div class="profile-info">
-          <h1>Audrey Wony</h1>
-          <p>Perempuan</p>
-          <p>27/05/2004</p>
-        </div>
+    .setting-item i {
+      font-size: 18px;
+      color: #FF88A0;
+    }
+
+    .setting-item span {
+      font-size: 16px;
+      color: #FF88A0;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+      background-color: #0d1a36;
+      border-radius: 16px;
+      text-align: center;
+      border: none;
+      color: #fff;
+    }
+
+    .modal-header {
+      border-bottom: none;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .btn-cancel {
+      background-color: transparent;
+      border: 2px solid #635bff;
+      color: #635bff;
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .btn-cancel:hover {
+      background-color: #635bff;
+      color: #fff;
+    }
+
+    .btn-confirm {
+      background-color: #635bff;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .btn-confirm:hover {
+      background-color: #5145e5;
+    }
+
+    .modal-footer {
+      justify-content: center;
+      border-top: none;
+    }
+
+    
+    
+  </style>
+</head>
+<body>
+  <!-- Profil -->
+  <div class="canvas-mobile">
+    <div class="profile">
+      <div class="avatar">
+        <img src="Turu.ico" class="avatar-img">
       </div>
-
-      <!-- Pengaturan -->
-      <div class="settings" style="padding-left: 32px">
-        <h2>Pengaturan</h2>
-        <div class="setting-item" onclick="hapusRekaman()">
-          <i class="fas fa-trash-alt"></i>
-          <span>Hapus Rekaman Tidur</span>
-        </div>
-        <div class="setting-item">
-          <i class="fas fa-sign-out-alt"></i>
-          <a href="/logout" class="nav-link">
-            <span>Keluar Akun</span>
-          </a>
-        </div>
+      <div class="profile-info">
+        <h1>Audrey Wony</h1>
+        <p>Perempuan</p>
+        <p>27/05/2004</p>
       </div>
-      <!-- Sticky Bottom Navbar -->
-      <nav class="navbar navbar-expand navbar-dark">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/beranda}">
-              <span class="bi bi-grid-fill nav-icon"></span>
-              Beranda
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/radio}">
-              <i class="bi bi-music-note nav-icon"></i>
-              Radio
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" th:href="@{/akun}">
-              <i class="bi bi-person-fill nav-icon"></i>
-              Akun
-            </a>
-          </li>
-        </ul>
-      </nav>
     </div>
 
-    <!-- Tambahkan Font Awesome untuk ikon -->
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="js/scriptRadio.js"></script>
-    <script src="js/scriptHeader.js"></script>
-    <script src="js/scriptBeranda.js"></script>
-    <!-- Tambahkan Font Awesome untuk ikon -->
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    <!-- Pengaturan -->
+    <div class="settings">
+      <h2>Pengaturan</h2>
+      <div class="setting-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        <i class="bi bi-trash3"></i>
+        <span>Hapus Rekaman Tidur</span>
+      </div>
+      <div class="setting-item" data-bs-toggle="modal" data-bs-target="#logoutModal">
+        <i class="bi bi-box-arrow-left"></i>
+        <span>Keluar Akun</span>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Navbar -->
+    <nav class="navbar navbar-expand navbar-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/beranda}">
+            <i class="bi bi-grid-fill nav-icon"></i>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/radio}">
+            <i class="bi bi-music-note nav-icon"></i>
+            Radio
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" th:href="@{/akun}">
+            <i class="bi bi-person-fill nav-icon"></i>
+            Akun
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Modal Hapus Data Tidur -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Yakin Hapus Data Tidur?</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Batalkan</button>
+          <button class="btn btn-confirm" id="confirmDelete">Konfirmasi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Log Out -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Yakin Log Out Akun?</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Batalkan</button>
+          <button class="btn btn-confirm" id="confirmLogout">Konfirmasi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Logika untuk Hapus Data Tidur
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+      alert('Data tidur telah dihapus.');
+      // Tambahkan logika penghapusan data di sini
+    });
+
+    // Logika untuk Log Out
+    document.getElementById('confirmLogout').addEventListener('click', function() {
+      window.location.href = '/logout';
+      // Tambahkan logika log out di sini
+    });
+  </script>
+  <script src="js/scriptRadio.js"></script>
+  <script src="js/scriptHeader.js"></script>
+  <script src="js/scriptBeranda.js"></script>
+</body>
 </html>
