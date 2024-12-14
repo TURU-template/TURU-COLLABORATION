@@ -252,6 +252,11 @@ a.nav-link{
     background-color: rgba(79, 70, 229, 0.1);
 }
 
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
 
 /*========== HIASAN ==========*/
 .dot {

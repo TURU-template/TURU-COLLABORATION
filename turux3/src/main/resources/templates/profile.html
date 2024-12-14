@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="Turu.ico" type="image/x-icon"> <!-- Logo/Icon Web -->
   <title>🤤- Profil</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"> <!-- Library CSS Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> <!-- Icon Asset -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <!-- Library CSS Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <!-- Icon Asset -->
   <link rel="stylesheet" href="css/style.css"> <!-- Style Utama -->
   <style>
-    
-  
-
     /* Profil Section */
     .profile {
       text-align: center;
@@ -74,7 +74,7 @@
     .modal-dialog {
       justify-content: center;
     }
-    
+
     .modal-content {
       background-color: #0d1a36;
       border-radius: 16px;
@@ -122,11 +122,9 @@
       justify-content: center;
       border-top: none;
     }
-
-    
-    
   </style>
 </head>
+
 <body>
   <!-- Profil -->
   <div class="canvas-mobile">
@@ -216,19 +214,18 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Logika untuk Hapus Data Tidur
-    document.getElementById('confirmDelete').addEventListener('click', function() {
+    document.getElementById('confirmDelete').addEventListener('click', function () {
       alert('Data tidur telah dihapus.');
       // Tambahkan logika penghapusan data di sini
     });
 
-    // Logika untuk Log Out
-    document.getElementById('confirmLogout').addEventListener('click', function() {
+    document.getElementById('confirmLogout').addEventListener('click', function () {
       window.location.href = '/logout';
-      // Tambahkan logika log out di sini
     });
   </script>
   <script src="js/scriptRadio.js"></script>
   <script src="js/scriptHeader.js"></script>
   <script src="js/scriptBeranda.js"></script>
 </body>
+
 </html>

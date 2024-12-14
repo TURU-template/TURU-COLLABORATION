@@ -1,47 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Login Pengguna</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="min-h-screen bg-[#080821] flex items-center justify-center p-4 login">
-<div class="w-full max-w-md space-y-8">
-  <div class="bg-[#080821] p-8 rounded-lg border border-indigo-900">
-    <h2 id="form-title" class="text-2xl font-bold text-white mb-8 text-center">
-      Login Pengguna
-    </h2>
+  <div class="w-full max-w-md space-y-8">
+    <div class="bg-[#080821] p-8 rounded-lg border border-indigo-900">
+      <h2 class="text-2xl font-bold text-white mb-8 text-center">Login Pengguna</h2>
+      <form th:action="@{/perform_login}" method="post" class="space-y-4">
+        <div class="relative">
+          <input type="text" name="username" placeholder="Masukkan Username"
+            class="w-full px-4 py-3 bg-white rounded-lg pl-10" required>
+          <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
+        </div>
+        <div class="relative">
+          <input type="password" name="password" placeholder="Masukkan Kata Sandi"
+            class="w-full px-4 py-3 bg-white rounded-lg pl-10" required>
+          <span class="absolute left-3 top-3.5 text-gray-400">🔑</span>
+        </div>
+        <div class="error" th:if="${param.error}" th:text="'Username atau password tidak sesuai'"></div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 text-white rounded-lg">Login</button>
+        <a class="block w-full py-3 text-center bg-indigo-600 text-white rounded-lg mt-4" th:href="@{/register}">
+          Belum Punya Akun
+        </a>
+      </form>
 
-    <form class="space-y-4" action="/login" method="post">
-      <!-- Username -->
-      <div class="relative">
-        <input
-                type="text"
-                name="username"
-                placeholder="Masukkan Username"
-                required
-                class="w-full px-4 py-3 bg-white rounded-lg pl-10"
-        />
-        <span class="absolute left-3 top-3.5 text-gray-400">👤</span>
-      </div>
 
-      <!-- Password -->
-      <div class="relative">
-        <input
-                type="password"
-                name="password"
-                placeholder="Masukkan Kata Sandi"
-                required
-                class="w-full px-4 py-3 bg-white rounded-lg pl-10"
-        />
-        <span class="absolute left-3 top-3.5 text-gray-400">🔑</span>
-      </div>
-
-      <button type="submit" class="submit-btn">Login</button>
-      <a type="button" class="switch-btn" th:href="@{/register}">Belum Punya Akun</a>
-    </form>
+    </div>
   </div>
-</div>
 </body>
+
 </html>
