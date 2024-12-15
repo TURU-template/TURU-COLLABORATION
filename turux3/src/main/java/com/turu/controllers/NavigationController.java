@@ -43,10 +43,22 @@ public class NavigationController {
 		return "Kelompok IMPAL x PBO";
 	}
 
-	
-    @GetMapping("/lama-waktu-tidur")
+
+    @GetMapping("/tips_lama-waktu-tidur")
     public String lamaWaktuTidurPage() {
-        return "lama-waktu-tidur"; // Mengarah ke lama-waktu-tidur.html
+        return "tips_lama-waktu-tidur"; // Mengarah ke tips_lama-waktu-tidur.html
     }
+
+	@GetMapping("/tips_posisi-tidur")
+	public String posisiTidurPage() {
+		return "tips_posisi-tidur"; // Mengarah ke posisi-tidur.html
+	}
+
+	@GetMapping("/tips_alas-tidur")
+	public String alasTidurPage() {
+		return "tips_alas-tidur"; // Mengarah ke tips_alas-tidur.html
+	}
+	
+
 }
 	
