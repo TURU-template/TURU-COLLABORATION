@@ -448,6 +448,41 @@ a.nav-link{
     transition: background-color 0.3s ease-in-out;
   }
 
+    /* Menyesuaikan lebar kolom tabel */
+    .custom-table {
+    width: 90%; /* Lebar tabel tetap 100% */
+    margin: 0 auto; /* Tengah di halaman */
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    padding: 8px 12px; /* Padding untuk konten di sel tabel */
+    text-align: center; /* Posisi teks di tengah */
+  }
+  
+  .custom-table thead th {
+    font-size: 0.9rem; /* Ukuran font header */
+    background-color: #6c5ce7; /* Warna ungu header */
+    color: #ffffff; /* Warna teks putih */
+    font-weight: bold;
+  }
+  
+  .custom-table tbody td {
+    font-size: 0.85rem; /* Ukuran font isi tabel */
+  }
+  
+  /* Lebar khusus untuk kolom */
+  .custom-table thead th:first-child,
+  .custom-table tbody td:first-child {
+    width: 70%; /* Lebarkan kolom "Kelompok Usia" */
+    text-align: left; /* Rata kiri untuk teks di kolom ini */
+  }
+  
+  .custom-table thead th:last-child,
+  .custom-table tbody td:last-child {
+    width: 30%; /* Persempit kolom "Lama Tidur yang Disarankan" */
+  }
+
 /*========== HIASAN ==========*/
 .dot {
     position: absolute;
