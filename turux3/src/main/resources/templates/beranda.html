@@ -31,7 +31,6 @@
             </button>
         </form>        
         
-
         <!-- Stopwatch Button -->
         <button id="stopwatchBtn" class="stopwatch-button">START</button>
 
@@ -45,6 +44,16 @@
           <span class="greeting" th:text="${sapa}">Sapaan, </span>
           <span class="nama" th:text="${nama}">Nama</span>
         </p>
+
+        <!-- Statistik Tidur Chart -->
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Canvas untuk Chart -->
+        <div class="container mt-4">
+          <h5>Statistik Tidur Mingguan</h5>
+          <canvas id="sleepChart"></canvas>
+        </div>
       </div>
 
       <!-- Sticky Bottom Navbar -->
@@ -71,6 +80,41 @@
         </ul>
       </nav>
     </div>
+
+    <!-- Chart.js Script -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const sleepStats = /*[[${sleepStats}]]*/ {};
+        const days = ["S", "S", "R", "K", "J", "S", "M"];
+        const sleepData = days.map(day => sleepStats[day] || 0);
+
+        const ctx = document.getElementById('sleepChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Durasi Tidur (menit)',
+                    data: sleepData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Durasi (menit)'
+                        }
+                    }
+                }
+            }
+        });
+        /*]]>*/
+    </script>
 
     <script src="js/scriptHeader.js"></script>
     <script src="js/scriptBeranda.js"></script>
