@@ -408,6 +408,46 @@ a.nav-link{
     background-color: #5a4dba; /* Warna ungu lebih gelap */
   }
 
+  /* Styling Tabel dengan Tema UI Gelap */
+.custom-table {
+    background-color: #1e1e2e; /* Warna latar tabel gelap */
+    color: #ffffff; /* Warna teks putih */
+    border-collapse: separate; /* Memberi jarak pada border */
+    border-spacing: 0; /* Hilangkan jarak default antar sel */
+    border-radius: 12px; /* Sudut tabel melengkung */
+    overflow: hidden; /* Agar border-radius terlihat */
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Efek bayangan */
+  }
+  
+  .custom-table thead {
+    background-color: #6c5ce7; /* Warna ungu untuk header tabel */
+    color: #ffffff; /* Warna teks putih */
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    padding: 12px 16px; /* Padding sel tabel */
+    border: 1px solid #4b4b6b; /* Border dengan warna lembut */
+    text-align: center; /* Posisi teks di tengah */
+  }
+  
+  .custom-table tbody tr:nth-child(even) {
+    background-color: #25253a; /* Warna gelap untuk baris genap */
+  }
+  
+  .custom-table tbody tr:nth-child(odd) {
+    background-color: #2b2b45; /* Warna sedikit lebih terang untuk baris ganjil */
+  }
+  
+  .custom-table tbody tr:hover {
+    background-color: #6c5ce7; /* Warna ungu saat di-hover */
+    color: #ffffff; /* Warna teks saat hover */
+    transition: background-color 0.3s ease-in-out;
+  }
+
 /*========== HIASAN ==========*/
 .dot {
     position: absolute;
