@@ -24,7 +24,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/beranda", true)
                 .failureUrl("/login?error=true")
                 .permitAll())
             .logout(logout -> logout

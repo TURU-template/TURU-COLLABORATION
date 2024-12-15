@@ -13,6 +13,7 @@ const soundSources = {
     jangkrik: "../asset/songs/Jangkrik.mp3",
     ombak: "../asset/songs/Ombak.mp3",
     api: "../asset/songs/Api.mp3",
+    hujan: "../asset/songs/Hujan.mp3",
     burung: "../asset/songs/burung.mp3",
     
     twilight: "../asset/songs/twilight.mp3",

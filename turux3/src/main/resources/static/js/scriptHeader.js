@@ -9,7 +9,7 @@ function updateDateTime() {
     const now = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     currentDateDisplay.textContent = now.toLocaleDateString('id-ID', options);
-    currentTimeDisplay.textContent = now.toLocaleTimeString('en-US', { hour12: true });
+    currentTimeDisplay.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
 }
 // Update the date and time every second
 setInterval(updateDateTime, 1000);

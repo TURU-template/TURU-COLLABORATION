@@ -17,6 +17,7 @@ public class BerandaController {
 		model.addAttribute("buttonLabel", getLabelForState(state));
 		model.addAttribute("buttonClass", getClassForState(state));
 		model.addAttribute("buttonIcon", getIconForState(state));
+		
 		return "beranda"; // Thymeleaf template
 	}
 
@@ -42,9 +43,9 @@ public class BerandaController {
 			case "tidur":
 				return "Tombol Tidur";
 			case "tidur-active":
-				return "Tombol Tidur";
-			case "bangun":
 				return "Tombol Bangun";
+			case "bangun":
+				return "Tombol Tidur";
 			default:
 				return "";
 		}

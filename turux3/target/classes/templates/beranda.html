@@ -1,79 +1,94 @@
 <!-- beranda.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="Turu.ico" type="image/x-icon" />
-    <!-- Logo/Icon Web -->
-    <title>🤤- Beranda</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-    <!-- Library CSS Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-    <!-- Icon Asset -->
-    <link rel="stylesheet" href="css/style.css" />
-    <!-- Style Utama -->
-  </head>
-  <body>
-    <!-- Fixed Header -->
-    <div class="canvas-mobile">
-      <!-- Header Status -->
-      <header class="header">
-        <div class="date" id="currentDate">[Tanggal]</div>
-        <div class="time" id="currentTime">[WIB]</div>
-      </header>
-      <!-- CONTENT PAGE -->
-      <div class="content">
-        <form action="/beranda/toggle-button" method="post">
-            <button id="turu-button" type="submit" class="turu-button" th:classappend="${buttonClass}">
-                <i th:class="'bi ' + ${buttonIcon}"></i>
-                <span th:text="${buttonLabel}"></span>
-            </button>
-        </form>        
-        
 
-        <!-- Stopwatch Button -->
-        <button id="stopwatchBtn" class="stopwatch-button">START</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="Turu.ico" type="image/x-icon" />
+  <!-- Logo/Icon Web -->
+  <title>🤤- Beranda</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Library CSS Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+  <!-- Icon Asset -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Style Utama -->
+</head>
 
-        <!-- Result Display -->
-        <div class="result" id="resultDisplay">Elapsed Time: 0 hrs 0 secs</div>
-        <div class="result" id="timestampDisplay">Timestamp: -</div>
+<body>
+  <!-- Fixed Header -->
+  <div class="canvas-mobile">
+    <!-- Header Status -->
+    <header class="header">
+      <div class="date" id="currentDate">[Tanggal]</div>
+      <div class="time" id="currentTime">[WIB]</div>
+    </header>
+    <!-- CONTENT PAGE -->
+    <div class="content center">
 
-        <!-- Username greeting -->
-        <br /><br />
-        <p>
-          <span class="greeting" th:text="${sapa}">Sapaan, </span>
-          <span class="nama" th:text="${nama}">Nama</span>
-        </p>
+      <!-- Ini Contoh Penrapan pakai Backend Java tp masih ngebug
+      <form action="/beranda/toggle-button" class="center" method="post">
+        <button id="turu-button" type="submit" class="turu-button" th:classappend="${buttonClass}">
+          <i th:class="'bi ' + ${buttonIcon}"></i>
+        </button>
+      </form> -->
+
+      <button id="stopwatchBtn" class="turu-button">🙂</button>
+      <br>
+      <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
+
+      <br><br>
+      <div class="subtitle">Data Tidur</div>
+      <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>  
+      <div class="result" id="durationDisplay">13 j 20m</div>
+   
+
+      <br><br><br><br>
+      <div class="subtitle">Skor Tidur</div>
+      <!-- Character Display -->
+      <div class="row">
+        <div class="col result" id="mascotDisplay">🐨</div>
+        <div class="col result" id="scoreDisplay">69</div>
+      </div>
+      <h3 class="result" id="mascotNameDisplay">Koala Pemalas</h3>
+      <div class="result" id="mascotDescriptionDisplay">Anda telah tidur lebih dari 12 jam, tidur Anda melebihi batas normal.
       </div>
 
-      <!-- Sticky Bottom Navbar -->
-      <nav class="navbar navbar-expand navbar-dark">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" th:href="@{/beranda}">
-              <span class="bi bi-grid-fill nav-icon"></span>
-              Beranda
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/radio}">
-              <i class="bi bi-music-note nav-icon"></i>
-              Radio
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/akun}">
-              <i class="bi bi-person-fill nav-icon"></i>
-              Akun
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <br><br><br><br>
+      <div class="subtitle">Statistik Tidur</div>
+      <div class="result" id="rangeWeek">16 Desember 2024 - 22 Desember 2024</div>
+      <div class="kotakAreaStatistik">.</div>
     </div>
 
-    <script src="js/scriptHeader.js"></script>
-    <script src="js/scriptBeranda.js"></script>
-    <script src="js/scriptRadio.js"></script>
-  </body>
+    <!-- Sticky Bottom Navbar -->
+    <nav class="navbar navbar-expand navbar-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" th:href="@{/beranda}">
+            <span class="bi bi-grid-fill nav-icon"></span>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/radio}">
+            <i class="bi bi-music-note nav-icon"></i>
+            Radio
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/akun}">
+            <i class="bi bi-person-fill nav-icon"></i>
+            Akun
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <script src="js/scriptHeader.js"></script>
+  <script src="js/scriptBeranda.js"></script>
+  <script src="js/scriptRadio.js"></script>
+</body>
+
 </html>
