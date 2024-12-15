@@ -214,6 +214,21 @@ a.nav-link{
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+.tips-button {
+    background-color: #6c5ce7; /* Warna ungu selaras dengan tema */
+    color: #fff; /* Warna teks putih */
+    border: none; /* Hilangkan border */
+    border-radius: 15px; /* Membuat sudut tombol melengkung */
+    font-size: 14px; /* Ukuran font */
+    padding: 5px 10px; /* Padding tombol */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Bayangan tombol */
+    text-decoration: none;
+  }
+  
+  .tips-button:hover {
+    background-color: #5a4dba; /* Warna ungu lebih gelap saat di-hover */
+  }
+
 /*========== STATISTIK ==========*/
 .col {
     padding-right: 4px;

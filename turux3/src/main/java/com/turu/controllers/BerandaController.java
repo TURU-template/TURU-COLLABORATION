@@ -20,6 +20,10 @@ public class BerandaController {
 		
 		return "beranda"; // Thymeleaf template
 	}
+	@GetMapping("/tips")
+	public String tipsPage() {
+		return "tips"; // Mengarah ke file templates/tips.html
+	}
 
 	@PostMapping("/beranda/toggle-button")
 	public String toggleButton() throws InterruptedException {
