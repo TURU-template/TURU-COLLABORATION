@@ -1,14 +1,23 @@
 package com.turu.controllers;
 
+import com.turu.service.DataTidurService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Map;
+
 @Controller
 public class BerandaController {
 	// Define the button's state
 	private String state = "tidur"; // Initial state (tidur, tidur-active, bangun)
+
+	private final DataTidurService dataTidurService;
+
+	public BerandaController(DataTidurService dataTidurService) {
+		this.dataTidurService = dataTidurService;
+	}
 
 	@GetMapping("/beranda")
 	public String beranda(Model model) {
@@ -17,6 +26,12 @@ public class BerandaController {
 		model.addAttribute("buttonLabel", getLabelForState(state));
 		model.addAttribute("buttonClass", getClassForState(state));
 		model.addAttribute("buttonIcon", getIconForState(state));
+
+		// Statistik tidur pengguna mingguan
+		Long penggunaId = 1L; // Gantilah ini sesuai ID pengguna login
+		Map<String, Integer> sleepStats = dataTidurService.getWeeklySleepStats(penggunaId);
+		model.addAttribute("sleepStats", sleepStats);
+		
 		return "beranda"; // Thymeleaf template
 	}
 
