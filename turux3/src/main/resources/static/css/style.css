@@ -350,6 +350,64 @@ a.nav-link{
     margin-top: 4px;
   }
 
+
+
+
+/*========== TIPS.html ==========*/
+/* Tombol Unik dengan Warna Berbeda */
+.custom-btn-purple {
+    background-color: #9b59b6; /* Ungu */
+    color: #fff;
+    border: none;
+    border-radius: 30px; /* Bentuk lonjong */
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .custom-btn-teal {
+    background-color: #1abc9c; /* Hijau Tosca */
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .custom-btn-orange {
+    background-color: #e67e22; /* Oranye */
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  /* Efek Hover untuk Tombol */
+  .custom-btn-purple:hover,
+  .custom-btn-teal:hover,
+  .custom-btn-orange:hover {
+    transform: scale(1.05); /* Perbesar sedikit */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
+  }
+  
+  /* Styling Tombol Kembali ke Beranda */
+  .btn-primary {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 30px; /* Bentuk lonjong */
+    background-color: #6c5ce7; /* Warna ungu */
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #5a4dba; /* Warna ungu lebih gelap */
+  }
+
 /*========== HIASAN ==========*/
 .dot {
     position: absolute;

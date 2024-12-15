@@ -42,5 +42,11 @@ public class NavigationController {
 	public String displayAnggota() {
 		return "Kelompok IMPAL x PBO";
 	}
+
+	
+    @GetMapping("/lama-waktu-tidur")
+    public String lamaWaktuTidurPage() {
+        return "lama-waktu-tidur"; // Mengarah ke lama-waktu-tidur.html
+    }
 }
 	
