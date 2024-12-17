@@ -87,6 +87,42 @@ public class DataTidur {
         setDurasi(LocalTime.ofSecondOfDay(duration.getSeconds()));
     }
 
-    public void hitungSkor() {}
+    public void hitungSkor(int age) {
+        double minHours;
+        double maxHours;
+        double sleepDuration = 0;
+        if (this.durasi.getSecond() >= 31) {
+            sleepDuration = this.durasi.getHour() + ((this.durasi.getMinute()+1)/60);
+        } else {
+            sleepDuration = this.durasi.getHour() + (this.durasi.getMinute()/60);
+        }
+         
+        // Rekomendasi durasi tidur berdasarkan umur
+        if (age >= 13 && age <= 17) { // remaja
+            minHours = 8;
+            maxHours = 10;
+        } else if (age >= 18 && age <= 64) { // dewasa
+            minHours = 7;
+            maxHours = 9;
+        } else if (age >= 65) { // lanjut usia
+            minHours = 7;
+            maxHours = 8;
+        } else {
+            throw new IllegalArgumentException("Umur harus diantara 13 - 65");
+        }
 
+        // Hitung pergeseran
+        double deviation = 0;
+        if (sleepDuration < minHours) {
+            deviation = (minHours - sleepDuration) * 60; 
+        } else if (sleepDuration > maxHours) {
+            deviation = (sleepDuration - maxHours) * 60; 
+        }
+
+        // Pengurangan score
+        double reduction = deviation * 0.35; // minus 0,35 per menit
+        int score = (int) Math.max(100 - reduction, 1); // Ensure score is within range [1, 100]
+
+        setSkor(score);
+    }
 }
