@@ -1,15 +1,20 @@
 package com.turu.controllers;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.time.*;
+import com.turu.service.DataTidurService;
+
 
 @Controller
 public class BerandaController {
 	// Define the button's state
 	private String state = "tidur"; // Initial state (tidur, tidur-active, bangun)
 
+	
 	@GetMapping("/beranda")
 	public String beranda(Model model) {
 		// Pass the current state to the frontend
@@ -33,6 +38,9 @@ public class BerandaController {
 				state = "tidur-active";
 				Thread.sleep(3000); // Simulate delay
 				state = "bangun";
+				DataTidurService dataTidurService = new DataTidurService();
+				LocalDateTime time = LocalDateTime.now();
+				dataTidurService.addStart(time);
 				break;
 			case "bangun":
 				state = "tidur";
