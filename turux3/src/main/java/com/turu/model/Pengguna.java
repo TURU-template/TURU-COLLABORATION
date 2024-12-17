@@ -19,6 +19,7 @@ public class Pengguna {
     @Column(nullable = false)
     private String password;
 
+    private boolean state;
     private String jk;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -78,6 +79,14 @@ public class Pengguna {
     public void setDataTidurList(List<DataTidur> dataTidurList) {
         this.dataTidurList = dataTidurList;
     }
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
 }
 
 
