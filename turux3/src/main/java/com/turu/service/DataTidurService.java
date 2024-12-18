@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.turu.model.DataTidur;
 import com.turu.repository.DataTidurRepository;
+import java.time.LocalDate;
+import java.util.List;
 public class DataTidurService {
     DataTidur dt = new DataTidur();
     @Autowired
