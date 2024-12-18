@@ -31,13 +31,6 @@
     <!-- CONTENT PAGE -->
     <div class="content center">
 
-      <!-- Ini Contoh Penrapan pakai Backend Java tp masih ngebug
-      <form action="/beranda/toggle-button" class="center" method="post">
-        <button id="turu-button" type="submit" class="turu-button" th:classappend="${buttonClass}">
-          <i th:class="'bi ' + ${buttonIcon}"></i>
-        </button>
-      </form> -->
-
       <button id="stopwatchBtn" class="turu-button">🙂</button>
       <br>
       <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
@@ -62,6 +55,13 @@
       <br><br><br><br>
       <div class="subtitle">Statistik Tidur</div>
       <div class="result" id="rangeWeek">16 Desember 2024 - 22 Desember 2024</div>
+      
+      <!-- Tambahkan Chart Tidur Mingguan -->
+      <div style="width: 100%; max-width: 600px; margin: 0 auto;">
+        <canvas id="sleepChart"></canvas>
+      </div>
+
+      <!-- Kotak Area Statistik Lama (Jangan Diubah) -->
       <div class="kotakAreaStatistik">.</div>
     </div>
 
@@ -93,6 +93,36 @@
   <script src="js/scriptHeader.js"></script>
   <script src="js/scriptBeranda.js"></script>
   <script src="js/scriptRadio.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Data skor tidur dan label hari dari controller
+    const sleepScores = [[${sleepScores}]];
+    const dayLabels = [[${dayLabels}]];
+
+    // Render Chart.js
+    const ctx = document.getElementById('sleepChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dayLabels, // Label hari S S R K J S M
+            datasets: [{
+                label: 'Skor Tidur Mingguan',
+                data: sleepScores, // Nilai skor tidur
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100 // Maksimal skor 100
+                }
+            }
+        }
+    });
+  </script>
 </body>
 
 </html>

@@ -15,4 +15,7 @@ public class DataTidurService {
         dt.setTanggal(time.toLocalDate().plusDays(1));
         dataTidurRepository.save(dt);
     }
+    public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate) {
+        return dataTidurRepository.findByTanggalBetween(startDate, endDate);
+    }
 }
