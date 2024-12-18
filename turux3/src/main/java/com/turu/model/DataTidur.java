@@ -8,7 +8,7 @@ public class DataTidur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private LocalDateTime waktuMulai;
     private LocalDateTime waktuSelesai;
     private LocalDate tanggal;
