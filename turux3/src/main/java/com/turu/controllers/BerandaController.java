@@ -14,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BerandaController {
     // Define the button's state
     private String state = "tidur"; // Initial state (tidur, tidur-active, bangun)
-    
-    @Autowired
+
+
     private DataTidurService dataTidurService;
+    @Autowired
+    public BerandaController(DataTidurService dataTidurService) {
+        this.dataTidurService = dataTidurService;
+    }
 
     @GetMapping("/beranda")
     public String beranda(Model model) {
@@ -64,7 +68,6 @@ public class BerandaController {
                 state = "tidur-active";
                 Thread.sleep(3000); // Simulate delay
                 state = "bangun";
-                DataTidurService dataTidurService = new DataTidurService();
                 LocalDateTime time = LocalDateTime.now();
                 dataTidurService.addStart(time);
                 break;
