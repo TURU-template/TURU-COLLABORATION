@@ -30,13 +30,16 @@
     </a>
     <!-- CONTENT PAGE -->
     <div class="content center">
-      
+      <div th:unless="${state}">
         <button id="stopwatchBtn" class="turu-button">🙂</button>
         <br>
         <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
-      
-      
-
+      </div>
+      <div th:if="${state}">
+        <button id="stopwatchBtn" class="turu-button">😴</button>
+        <br>
+        <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
+      </div>
       <br><br>
       <div class="subtitle">Data Tidur</div>
       <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>  
