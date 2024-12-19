@@ -65,7 +65,6 @@ body.login {
     scroll-behavior: smooth;
     scrollbar-width: none; 
     scrollbar-color: var(--indigo) transparent;
-    position: relative;
     z-index: 2;
 }
 
@@ -75,7 +74,7 @@ body.login {
     flex: 1; /* Allow content to take up remaining space */
     overflow-y: auto; /* Enable scrolling for overflowing content */
     padding: 8%;
-    padding-top: 70px; /* Extra space for fixed header */
+    padding-top: 64px; /* Extra space for fixed header */
     padding-bottom: 70px; /* Extra space for fixed navbar */
 }
 
@@ -90,22 +89,21 @@ body.login {
 .canvas-mobile.radio{
     background-image:         
         linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-        url("../asset/BGRadio.svg");
+        url("../asset/BG_Radio.svg");
     background-size: cover;
     background-position: bottom;
     background-repeat: no-repeat;
 }
 
 .canvas-mobile.beranda{
-    background-image: url("../asset/IMG-20241202-WA0020.jpg");
+    background-image: url("../asset/BG_Beranda.svg") !important;
     background-size: cover;
-    background-position: bottom;
     background-repeat: no-repeat;
 }
 
 .content {
     padding: 8%;
-    padding-top: 70px; /* Extra space for fixed header */
+    padding-top: 64px; /* Extra space for fixed header */
 }
 
 .content.radio button{
@@ -176,6 +174,7 @@ a.nav-link{
 
 /*==========BERANDA==========*/
 .center{
+    text-align: center !important;
     align-items: center !important;
     justify-content: center !important;
     justify-self: center !important;
@@ -215,19 +214,61 @@ a.nav-link{
 }
 
 .tips-button {
-    background-color: #6c5ce7; /* Warna ungu selaras dengan tema */
-    color: #fff; /* Warna teks putih */
-    border: none; /* Hilangkan border */
-    border-radius: 15px; /* Membuat sudut tombol melengkung */
-    font-size: 14px; /* Ukuran font */
-    padding: 5px 10px; /* Padding tombol */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Bayangan tombol */
+    margin-top: 32%;
+    margin-bottom: 75%;
+    background-color: var(--indigo); /* Warna ungu selaras dengan tema */
+    color: #fff !important; /* Warna teks putih */
+    border: none;
+    box-shadow: 0px 0px 16px 4px rgba(81, 79, 194, 0.746);
+    border-radius: 8px; /* Membuat sudut tombol melengkung */
+    font-size: 16px; /* Ukuran font */
+    padding: 8px 20px; /* Padding tombol */
     text-decoration: none;
   }
   
   .tips-button:hover {
     background-color: #5a4dba; /* Warna ungu lebih gelap saat di-hover */
   }
+
+/*========== FLOATING BUTTON ==========*/
+/* Floating Button Styling */
+
+.floating-btn i {
+    font-size: 28px;    
+}
+.floating-btn {
+    position: fixed;
+    min-width: 80px;
+    bottom: 120px;
+    right: 32px;
+    background-color: var(--pink, #DA5798); /* Use your CSS variable or fallback color */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+/* Hover Effect */
+.floating-btn:hover {
+    background-color: #C94B89; /* Slightly darker pink for hover */
+}
+
+/* Focus State */
+.floating-btn:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(218, 87, 152, 0.8);
+}
 
 /*========== STATISTIK ==========*/
 .col {
@@ -312,7 +353,7 @@ a.nav-link{
 .submit-btn {
     width: 100%;
     padding: 12px;
-    background-color: #4f46e5;
+    background-color: var(--indigo);
     color: white;
     border: none;
     border-radius: 8px;
@@ -332,8 +373,8 @@ a.nav-link{
     justify-content: center;
     padding: 12px;
     background-color: transparent;
-    color: #4f46e5;
-    border: 1px solid #4f46e5;
+    color: var(--indigo);
+    border: 1px solid var(--indigo);
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
@@ -352,11 +393,10 @@ a.nav-link{
 
 
 
-
 /*========== TIPS.html ==========*/
 /* Tombol Unik dengan Warna Berbeda */
 .custom-btn-purple {
-    background-color: #9b59b6; /* Ungu */
+    background-color: #9b59b6 !important; /* Ungu */
     color: #fff;
     border: none;
     border-radius: 30px; /* Bentuk lonjong */
@@ -366,7 +406,7 @@ a.nav-link{
   }
   
   .custom-btn-teal {
-    background-color: #1abc9c; /* Hijau Tosca */
+    background-color: #1abc9c !important; /* Hijau Tosca */
     color: #fff;
     border: none;
     border-radius: 30px;
@@ -376,7 +416,7 @@ a.nav-link{
   }
   
   .custom-btn-orange {
-    background-color: #e67e22; /* Oranye */
+    background-color: #e67e22 !important; /* Oranye */
     color: #fff;
     border: none;
     border-radius: 30px;
@@ -449,7 +489,7 @@ a.nav-link{
   }
 
     /* Menyesuaikan lebar kolom tabel */
-    .custom-table {
+  .custom-table {
     width: 90%; /* Lebar tabel tetap 100% */
     margin: 0 auto; /* Tengah di halaman */
   }

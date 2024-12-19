@@ -112,11 +112,12 @@ function initializeButtons() {
 function handleHover(button, isHovered) {
     const colorVar = `--${button.dataset.color}`;
     const hoverColor = getComputedStyle(document.documentElement).getPropertyValue(colorVar);
-    if (isHovered) {
-        button.style.setProperty('--button-border-color', hoverColor);
-    } else {
-        button.style.setProperty('--button-border-color', hoverColor);
-    }
+    button.style.setProperty('--button-border-color', hoverColor);
+    
+    // if (isHovered) {
+    // } else {
+    //     button.style.setProperty('--button-border-color', hoverColor);
+    // }
 }
 
 // Attach hover event listeners
