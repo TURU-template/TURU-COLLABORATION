@@ -5,17 +5,20 @@ let currentTrackKey = null; // Keeps track of the currently playing sound
 
 // Define all audio sources
 const soundSources = {
+    //color
     white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
     brown: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3",
     blue: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3",
     pink: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3",
    
+    //ambiens
     jangkrik: "../asset/songs/Jangkrik.mp3",
     ombak: "../asset/songs/Ombak.mp3",
     api: "../asset/songs/Api.mp3",
     hujan: "../asset/songs/Hujan.mp3",
     burung: "../asset/songs/burung.mp3",
     
+    //Lo-Fi
     twilight: "../asset/songs/twilight.mp3",
     monoman: "../asset/songs/Monoman.mp3",
     yasumu: "../asset/songs/Yasumu.mp3"
