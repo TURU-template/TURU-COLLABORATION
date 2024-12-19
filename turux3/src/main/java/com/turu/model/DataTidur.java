@@ -98,7 +98,7 @@ public class DataTidur {
         }
          
         // Rekomendasi durasi tidur berdasarkan umur
-        if (age >= 13 && age <= 17) { // remaja
+        if (age <= 17) { // remaja
             minHours = 8;
             maxHours = 10;
         } else if (age >= 18 && age <= 64) { // dewasa
@@ -124,5 +124,11 @@ public class DataTidur {
         int score = (int) Math.max(100 - reduction, 1); // Ensure score is within range [1, 100]
 
         setSkor(score);
+    }
+    public void setIdPengguna(Pengguna pengguna ){
+        this.pengguna = pengguna;
+    }
+    public Pengguna getIdPengguna(){
+        return this.pengguna;
     }
 }

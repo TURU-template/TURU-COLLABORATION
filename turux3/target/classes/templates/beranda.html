@@ -30,15 +30,22 @@
     </a>
     <!-- CONTENT PAGE -->
     <div class="content center">
-
-      <button id="stopwatchBtn" class="turu-button">🙂</button>
-      <br>
-      <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
+      
+        <button id="stopwatchBtn" class="turu-button">🙂</button>
+        <br>
+        <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
+      
+      
 
       <br><br>
       <div class="subtitle">Data Tidur</div>
       <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>  
       <div class="result" id="durationDisplay">13 j 20m</div>
+      <script> 
+      let state = [[${state}]];  
+      </script>
+      
+
    
 
       <br><br><br><br>
@@ -89,7 +96,7 @@
       </ul>
     </nav>
   </div>
-
+  
   <script src="js/scriptHeader.js"></script>
   <script src="js/scriptBeranda.js"></script>
   <script src="js/scriptRadio.js"></script>
@@ -98,6 +105,7 @@
     // Data skor tidur dan label hari dari controller
     const sleepScores = [[${sleepScores}]];
     const dayLabels = [[${dayLabels}]];
+    
 
     // Render Chart.js
     const ctx = document.getElementById('sleepChart').getContext('2d');
