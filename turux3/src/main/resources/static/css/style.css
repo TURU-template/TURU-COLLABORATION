@@ -7,8 +7,8 @@
     --pink: #DA5798;
 
     --backdrop-color: #151619;
-    --canvas-color: #08082F;
-    --navbar-color: #070727;
+    --canvas-color: #02021d;
+    --navbar-color: #08082f;
     --header-bg-opacity: rgba(0, 0, 0, 0.25);
     --button-color: #007bff;
 
@@ -95,15 +95,15 @@ body.login {
     background-repeat: no-repeat;
 }
 
-.canvas-mobile.beranda{
-    background-image: url("../asset/BG_Beranda.svg") !important;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
 .content {
     padding: 8%;
     padding-top: 64px; /* Extra space for fixed header */
+}
+
+.content.beranda {
+    background-image: url("../asset/BG_Beranda.svg") !important;
+    background-attachment: local !important;
+    background-size: cover;
 }
 
 .content.radio button{
@@ -528,4 +528,25 @@ a.nav-link{
     position: absolute;
     border-radius: 50%;
     z-index: 1; /* Below canvas-mobile */
+}
+
+/*========== SCROLL ==========*/
+/* Slim and Transparent Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }

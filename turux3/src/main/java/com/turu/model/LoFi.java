@@ -20,11 +20,11 @@ public class LoFi extends Audio {
     }
 
     // Method playMix
-    @Override
-    public void playMix() {
-        System.out.println("Memainkan Lo-Fi mix oleh: " + pencipta + 
-                           ", judul: " + getName() + 
-                           ", sumber: " + getUrl() + 
-                           ", dengan volume: " + getVolume());
-    }
+    // @Override
+    // public void playMix() {
+    //     System.out.println("Memainkan Lo-Fi mix oleh: " + pencipta + 
+    //                        ", judul: " + getName() + 
+    //                        ", sumber: " + getUrl() + 
+    //                        ", dengan volume: " + getVolume());
+    // }
 }
