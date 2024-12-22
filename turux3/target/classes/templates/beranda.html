@@ -40,10 +40,12 @@
       <!-- Button Tips -->
       <a href="/tips" class="btn btn-outline-light btn-sm tips-button">
         <i class="bi bi-moon-stars-fill"></i>
-         &nbsp;Tips Tidur
+        &nbsp;Tips Tidur
       </a>
 
-      <div class="subtitle">Data Tidur</div>
+      <div class="subtitle">
+        Data Tidur <span class="pencil" id="editData">&#9998;</span>
+      </div>
       <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>
       <div class="result" id="durationDisplay">13 j 20m</div>
       <script>
@@ -79,9 +81,73 @@
     </div>
 
     <!-- Floating Button -->
-    <button class="floating-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button class="floating-btn" data-bs-toggle="modal" data-bs-target="#tambahModal">
       <i class="bi bi-calendar-plus"></i> Tambah
     </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tambahModalLabel">Tambah Data Tidur</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Konten Modal -->
+            <form>
+              <div class="mb-3">
+                <label for="tanggal" class="form-label">Tanggal</label>
+                <input type="date" class="form-control" id="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label for="waktuMulai" class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" id="waktuMulai" required>
+              </div>
+              <div class="mb-3">
+                <label for="waktuSelesai" class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" id="waktuSelesai" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Input Data Tidur -->
+    <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tambahModalLabel">Tambah Data Tidur</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="dataTidurForm">
+              <div class="mb-3">
+                <label for="tanggalMulai" class="form-label">Tanggal Mulai Tidur</label>
+                <input type="date" class="form-control" id="tanggalMulai" required>
+              </div>
+              <div class="mb-3">
+                <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
+                <input type="time" class="form-control" id="waktuMulai" required>
+              </div>
+              <div class="mb-3">
+                <label for="tanggalSelesai" class="form-label">Tanggal Bangun</label>
+                <input type="date" class="form-control" id="tanggalSelesai" required>
+              </div>
+              <div class="mb-3">
+                <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
+                <input type="time" class="form-control" id="waktuSelesai" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <!-- Sticky Bottom Navbar -->
     <nav class="navbar navbar-expand navbar-dark">
@@ -111,9 +177,10 @@
   <script src="js/scriptHeader.js"></script>
   <script src="js/scriptBeranda.js"></script>
   <script src="js/scriptRadio.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    
     // Data skor tidur dan label hari dari controller
     const sleepScores = [[${ sleepScores }]];
     const dayLabels = [[${ dayLabels }]];
@@ -142,6 +209,55 @@
         }
       }
     });
+  </script>
+
+  <script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //   const form = document.getElementById("dataTidurForm");
+
+    //   form.addEventListener("submit", async (event) => {
+    //     event.preventDefault();
+
+    //     // Ambil input dari form
+    //     const tanggalMulai = document.getElementById("tanggalMulai").value;
+    //     const waktuMulai = document.getElementById("waktuMulai").value;
+    //     const tanggalSelesai = document.getElementById("tanggalSelesai").value;
+    //     const waktuSelesai = document.getElementById("waktuSelesai").value;
+
+    //     // Gabungkan tanggal dan waktu menjadi format ISO
+    //     const waktuMulaiDateTime = `${tanggalMulai}T${waktuMulai}:00`;
+    //     const waktuSelesaiDateTime = `${tanggalSelesai}T${waktuSelesai}:00`;
+
+    //     // Ambil pengguna yang sedang login
+    //     const response = await fetch("/akun", { method: "GET" });
+    //     const pengguna = await response.json();
+
+    //     if (!pengguna || !pengguna.id) {
+    //       alert("Pengguna tidak ditemukan!");
+    //       return;
+    //     }
+
+    //     // Kirim data ke server
+    //     const responseTambah = await fetch("/data-tidur/tambah", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         waktuMulai: waktuMulaiDateTime,
+    //         waktuSelesai: waktuSelesaiDateTime,
+    //         idPengguna: pengguna.id,
+    //       }),
+    //     });
+
+    //     if (responseTambah.ok) {
+    //       alert("Data tidur berhasil ditambahkan!");
+    //       location.reload(); // Reload halaman setelah berhasil
+    //     } else {
+    //       alert("Terjadi kesalahan saat menambahkan data!");
+    //     }
+    //   });
+    // });
   </script>
 </body>
 

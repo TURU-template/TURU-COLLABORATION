@@ -79,3 +79,52 @@ stopwatchBtn.addEventListener('click', () => {
     run = !run;
 });
 
+document.getElementById('tambahModal').addEventListener('shown.bs.modal', function () {
+    console.log('Modal berhasil muncul.');
+  });
+  
+// document.addEventListener("DOMContentLoaded", function () {
+//     const form = document.getElementById("dataTidurForm");
+  
+//     form.addEventListener("submit", async (event) => {
+//       event.preventDefault();
+  
+//       const tanggal = document.getElementById("tanggalTidur").value;
+//       const waktuMulai = document.getElementById("waktuMulai").value;
+//       const waktuSelesai = document.getElementById("waktuSelesai").value;
+  
+//       // Kombinasi tanggal dan waktu untuk format LocalDateTime
+//       const waktuMulaiDateTime = `${tanggal}T${waktuMulai}:00`;
+//       const waktuSelesaiDateTime = `${tanggal}T${waktuSelesai}:00`;
+  
+//       // Ambil pengguna saat ini
+//       const response = await fetch("/akun", { method: "GET" });
+//       const pengguna = await response.json();
+  
+//       if (!pengguna || !pengguna.id) {
+//         alert("Pengguna tidak ditemukan!");
+//         return;
+//       }
+  
+//       // Kirim data ke server
+//       const responseTambah = await fetch("/data-tidur/tambah", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           waktuMulai: waktuMulaiDateTime,
+//           waktuSelesai: waktuSelesaiDateTime,
+//           idPengguna: pengguna.id,
+//         }),
+//       });
+  
+//       if (responseTambah.ok) {
+//         alert("Data tidur berhasil ditambahkan!");
+//         location.reload(); // Reload halaman setelah berhasil
+//       } else {
+//         alert("Terjadi kesalahan saat menambahkan data!");
+//       }
+//     });
+//   });
+  
