@@ -40,4 +40,11 @@ public class DataTidurService {
     public List<DataTidur> getAllDataTidur() {
         return dataTidurRepository.findAll();
     }
+    public void hapusSemuaDataTidur(Pengguna pengguna) {
+        List<DataTidur> dataTidurList = dataTidurRepository.findByPengguna(pengguna);
+        if (!dataTidurList.isEmpty()) {
+            dataTidurRepository.deleteAll(dataTidurList);
+        }
+    }
+
 }

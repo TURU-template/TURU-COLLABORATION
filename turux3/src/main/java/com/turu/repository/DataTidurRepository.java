@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface DataTidurRepository extends JpaRepository<DataTidur, Long> {
     List<DataTidur> findByTanggalBetween(LocalDate startDate, LocalDate endDate);
-
+    List<DataTidur> findByPengguna(Pengguna pengguna);
     // Find data tidur terbaru dari pengguna
     @Query("SELECT d FROM DataTidur d WHERE d.pengguna = :pengguna ORDER BY d.waktuMulai DESC  LIMIT 1")
     DataTidur findTopByPenggunaOrderByWaktuMulaiDesc(@Param("pengguna") Pengguna pengguna);

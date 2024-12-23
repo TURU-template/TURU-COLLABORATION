@@ -1,6 +1,7 @@
 package com.turu.controllers;
 
 import com.turu.model.Pengguna;
+import com.turu.service.DataTidurService;
 import com.turu.service.PenggunaService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +20,11 @@ import java.util.Optional;
 public class PenggunaController {
 
     private final PenggunaService penggunaService;
+    private final DataTidurService dataTidurService;
 
-    public PenggunaController(PenggunaService penggunaService) {
+    public PenggunaController(PenggunaService penggunaService, DataTidurService dataTidurService) {
         this.penggunaService = penggunaService;
+        this.dataTidurService = dataTidurService;
     }
 
     @GetMapping("/akun")
@@ -89,5 +92,22 @@ public class PenggunaController {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }
+    }
+    @GetMapping("/hapus-data-tidur")
+    public String hapusDataTidur(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = (principal instanceof UserDetails)
+                ? ((UserDetails) principal).getUsername()
+                : principal.toString();
+
+        Optional<Pengguna> pengguna = penggunaService.findByUsername(username);
+        if (pengguna.isEmpty()) {
+            throw new RuntimeException("Pengguna tidak ditemukan!");
+        }
+
+        // Hapus semua data tidur pengguna
+        dataTidurService.hapusSemuaDataTidur(pengguna.get());
+        model.addAttribute("message", "Semua data tidur berhasil dihapus.");
+        return "redirect:/akun";
     }
 }
