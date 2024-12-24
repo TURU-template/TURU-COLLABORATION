@@ -17,9 +17,14 @@
 <body>
   <!-- Profil -->
   <div class="canvas-mobile">
+    <header class="header">
+      <div class="date" id="currentDate">[Tanggal]</div>
+      <div class="time" id="currentTime">[WIB]</div>
+    </header>
+    <br>
     <div class="profile">
       <div class="avatar">
-        <img src="Turu.ico" class="avatar-img">
+        <img src="Turu.ico" class="avatar-img" alt="🤤">
       </div>
       <div class="profile-info">
         <h1 th:text="${pengguna.username}">Nama Pengguna</h1>

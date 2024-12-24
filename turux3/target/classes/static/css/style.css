@@ -113,13 +113,25 @@ body.login {
 /*========== NAVBAR ==========*/
 .navbar {
     position: fixed;
-    bottom: 0 !important;
+    justify-content: center;
+    bottom: 0;
     max-width: 480px;
     width: 100%;
     background-color: var(--navbar-color);
     padding: 5px 0;
     box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.5);
     z-index: 10;
+}
+
+.navbar.tips {
+  position: fixed;
+  justify-content: center;
+  bottom: 3 !important;
+  width: 100%;
+  background-color: var(--navbar-color);
+  padding: 5px 0;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 
 .navbar-nav {
@@ -435,7 +447,7 @@ a.nav-link{
   
   /* Styling Tombol Kembali ke Beranda */
   .btn-primary {
-    margin-top: 20px;
+    margin: 16px;
     padding: 12px 20px;
     font-size: 1rem;
     font-weight: 500;
@@ -610,9 +622,12 @@ a.nav-link{
     }
 
     .modal {
-        position: fixed !important;
-        z-index: 1050 !important;
+        position: fixed;
     }
+
+    .modal-backdrop {
+      z-index: 1;
+  }
     
     /* Modal Styles */
     .modal-dialog {
@@ -625,7 +640,7 @@ a.nav-link{
       text-align: center;
       border: none;
       color: #fff;
-      width: 300px;
+      max-width: 350px;
       justify-content: center;
     }
 
@@ -634,7 +649,7 @@ a.nav-link{
     }
 
     .modal-body {
-      padding: 20px;
+      padding: 24px;
     }
 
     .btn-cancel {
