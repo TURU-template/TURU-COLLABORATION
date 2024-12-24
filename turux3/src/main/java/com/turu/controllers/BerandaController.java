@@ -66,8 +66,13 @@ public class BerandaController {
         model.addAttribute("buttonLabel", getLabelForState(state));
         model.addAttribute("buttonClass", getClassForState(state));
         model.addAttribute("buttonIcon", getIconForState(state));
-        model.addAttribute("state", getLoggedInPengguna().isState());
-
+        if (!getLoggedInPengguna().isState()){
+            model.addAttribute("state", false);
+        }else {
+            model.addAttribute("state", true);
+        }
+        
+        
 
         LocalDate today = LocalDate.now();
 

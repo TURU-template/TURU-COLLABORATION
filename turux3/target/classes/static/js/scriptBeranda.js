@@ -1,7 +1,7 @@
 // =========STOPWATCH FUNCTION - SLEEP COUNTER=========
 
 let startTime, endTime;
-let run = false;
+let run = document.getElementById('stateContainer')
 const stopwatchBtn = document.getElementById('stopwatchBtn');
 const labelBtn = document.getElementById('labelBtn');
 const resultDisplay = document.getElementById('resultDisplay');

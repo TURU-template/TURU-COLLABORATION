@@ -26,16 +26,18 @@
     </header>
     <!-- CONTENT PAGE -->
     <div class="content beranda center">
-      <div class="center" th:unless="${state}">
-        <button id="stopwatchBtn" class="turu-button">🙂</button>
-        <br>
-        <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Tidur</h4>
-      </div>
       <div class="center" th:if="${state}">
         <button id="stopwatchBtn" class="turu-button">😴</button>
         <br>
         <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Bangun</h4>
       </div>
+      <div class="center" th:unless="${state}">
+        <button id="stopwatchBtn" class="turu-button">🙂</button>
+        <br>
+        <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Tidur</h4>
+      </div>
+      <div id="stateContainer" th:data-state="${state}"></div>
+      
 
       <!-- Button Tips -->
       <a href="/tips" class="btn btn-outline-light btn-sm tips-button">
@@ -50,9 +52,7 @@
       </div>
       <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>
       <div class="result" id="durationDisplay">13 j 20m</div>
-      <script>
-        let state = [[${ state }]];  
-      </script>
+      
 
       <br><br><br><br>
       <div class="subtitle">Skor Tidur</div>
@@ -161,8 +161,7 @@
         </li>
       </ul>
     </nav>
-  </div>
-
+  </div> 
   <script src="js/scriptHeader.js"></script>
   <script src="js/scriptBeranda.js"></script>
   <script src="js/scriptRadio.js"></script>
