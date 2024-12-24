@@ -677,6 +677,12 @@ a.nav-link{
       background-color: #5145e5;
     }
 
+    .btn-pencil {
+      color: var(--pink) ;
+      background-color: var(--backdrop-color);
+      border: none;
+    }
+
     .modal-footer {
       justify-content: center;
       border-top: none;

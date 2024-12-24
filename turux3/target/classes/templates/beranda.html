@@ -44,7 +44,9 @@
       </a>
 
       <div class="subtitle">
-        Data Tidur <span class="pencil" id="editData">&#9998;</span>
+        Data Tidur <button class= "btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal" id="editData">&#9998;
+          
+        
       </div>
       <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>
       <div class="result" id="durationDisplay">13 j 20m</div>
@@ -99,6 +101,33 @@
               <div class="mb-3">
                 <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
                 <input type="datetime-local" class="form-control" id="waktuSelesai" required>
+              </div>
+              <br><br>
+              <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
+              <button type="submit" class="btn btn-confirm">Simpan</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Edit Data Tidur -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Data Tidur</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="dataTidurForm" method="POST" action="editTidur">
+              <div class="mb-3">
+                <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
+                <input type="datetime-local" class="form-control" id="waktuMulai" value="xxx" required>
+              </div>
+              <div class="mb-3">
+                <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
+                <input type="datetime-local" class="form-control" id="waktuSelesai" value="xxx" required>
               </div>
               <br><br>
               <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
