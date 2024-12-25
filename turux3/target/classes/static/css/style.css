@@ -365,12 +365,11 @@ a.nav-link{
     margin: 16px 0px;
 }
 
-.kotakAreaStatistik{
-    margin-top: 5%;
-    width: 100%;
-    min-height: 300px;
-    border-radius: 16pt;
-    background-color: var(--blue);
+#sleepChart{
+    width: auto;
+    height: 300px;
+    margin-top: 16pt;
+    margin-bottom: 64pt;
 }
 
 /*========== RADIO ==========*/

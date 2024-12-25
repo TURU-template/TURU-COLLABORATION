@@ -13,22 +13,26 @@ import java.util.List;
 @Service
 public class DataTidurService {
     DataTidur dt = new DataTidur();
-
     private DataTidurRepository dataTidurRepository;
+
     public DataTidurService(DataTidurRepository dataTidurRepository) {
         this.dataTidurRepository = dataTidurRepository;
     }
+
+    public void hapusSemuaDataTidur(Pengguna pengguna) {
+        List<DataTidur> dataTidurList = dataTidurRepository.findByPengguna(pengguna);
+        if (!dataTidurList.isEmpty()) {
+            dataTidurRepository.deleteAll(dataTidurList);
+        }
+    }
+
+    //TIDUR
     public void addStart(LocalDateTime time, Pengguna pengguna ){
         dt.setWaktuMulai(time);
         dt.setIdPengguna(pengguna);
         dataTidurRepository.save(dt);
     }
-    public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate, Pengguna pengguna) {
-        return dataTidurRepository.findByPenggunaAndTanggalBetween(pengguna, startDate, endDate);
-    }
-    public DataTidur cariTerbaruDataTidur(Pengguna pengguna) {
-        return dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
-    }
+    
     public void addEnd(LocalDateTime time, Pengguna pengguna){
         DataTidur dt = cariTerbaruDataTidur(pengguna);
         dt.setWaktuSelesai(time);
@@ -37,19 +41,20 @@ public class DataTidurService {
         dt.hitungSkor(Period.between(pengguna.getTanggalLahir(), LocalDate.now()).getYears());
         dataTidurRepository.save(dt);
     }
+    
+    //STATISTIK
+    public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate, Pengguna pengguna) {
+        return dataTidurRepository.findByPenggunaAndTanggalBetween(pengguna, startDate, endDate);
+    }
+    public DataTidur cariTerbaruDataTidur(Pengguna pengguna) {
+        return dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
+    }
+
     public List<DataTidur> getAllDataTidur() {
         return dataTidurRepository.findAll();
-    }
-    public void hapusSemuaDataTidur(Pengguna pengguna) {
-        List<DataTidur> dataTidurList = dataTidurRepository.findByPengguna(pengguna);
-        if (!dataTidurList.isEmpty()) {
-            dataTidurRepository.deleteAll(dataTidurList);
-        }
     }
 
     public List<Object[]> getSkorByTanggalAndPengguna(Long penggunaId) {
         return dataTidurRepository.findSkorByTanggalAndPenggunaId(penggunaId);
     }
-    
-
 }

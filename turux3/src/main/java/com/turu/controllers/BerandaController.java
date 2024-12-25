@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import com.turu.service.DataTidurService;
 import com.turu.model.DataTidur;
 import com.turu.model.Pengguna;
@@ -28,34 +32,35 @@ public class BerandaController {
     // Define the button's state
     private String state = "tidur"; // Initial state (tidur, tidur-active, bangun)
 
-    
     private PenggunaService penggunaService;
     private DataTidurService dataTidurService;
     private PenggunaRepository penggunaRepository;
-    
+
     @Autowired
-    public BerandaController(DataTidurService dataTidurService, PenggunaService penggunaService, PenggunaRepository penggunaRepository) {
+    public BerandaController(DataTidurService dataTidurService, PenggunaService penggunaService,
+            PenggunaRepository penggunaRepository) {
         this.dataTidurService = dataTidurService;
         this.penggunaService = penggunaService;
         this.penggunaRepository = penggunaRepository;
     }
+
     @ModelAttribute("pengguna")
     public Pengguna getLoggedInPengguna() {
-        
+
         // Retrieve the authentication object
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
+
         // Check if the authentication is not null and the user is authenticated
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("User is not authenticated!");
         }
-    
+
         // Get the username from the principal object
         Object principal = authentication.getPrincipal();
         String username = (principal instanceof UserDetails)
                 ? ((UserDetails) principal).getUsername()
                 : principal.toString();
-    
+
         // Find the user by username and return it, or throw exception if not found
         return penggunaService.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Pengguna tidak ditemukan!"));
@@ -68,38 +73,63 @@ public class BerandaController {
         model.addAttribute("buttonLabel", getLabelForState(state));
         model.addAttribute("buttonClass", getClassForState(state));
         model.addAttribute("buttonIcon", getIconForState(state));
-        if (!getLoggedInPengguna().isState()){
+        if (!getLoggedInPengguna().isState()) {
             model.addAttribute("state", false);
-        }else {
+        } else {
             model.addAttribute("state", true);
         }
-        Pengguna pengguna = getLoggedInPengguna();  // Mendapatkan pengguna yang sedang login
+
+        // STATISTIK
+        Pengguna pengguna = getLoggedInPengguna();
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(6);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        String dateRange = startDate.format(formatter) + " - " + today.format(formatter);
-        model.addAttribute("dateRange", dateRange);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        String[] fullDayLabels = new String[7];
+        String[] dateLabels = new String[7];
+        String[] dayLabels = new String[7];
 
-        // Ambil data tidur yang hanya milik pengguna yang sedang login
+        LocalDate currentDate = startDate;
+        for (int i = 0; i < 7; i++) {
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            fullDayLabels[i] = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("id")); // Full day in
+                                                                                                      // Indonesian
+
+            // Dynamic short day labels based on requirements
+            switch (dayOfWeek) {
+                case SUNDAY -> dayLabels[i] = "Mg";
+                case MONDAY -> dayLabels[i] = "Sn";
+                case TUESDAY -> dayLabels[i] = "Sl";
+                case WEDNESDAY -> dayLabels[i] = "Rb";
+                case THURSDAY -> dayLabels[i] = "Km";
+                case FRIDAY -> dayLabels[i] = "Jm";
+                case SATURDAY -> dayLabels[i] = "Sb";
+            }
+
+            dateLabels[i] = currentDate.format(formatter);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // Fetch user-specific sleep data
         List<DataTidur> sleepData = dataTidurService.getDataTidurMingguan(startDate, today, pengguna);
 
-        int[] sleepScores = new int[7]; // Default 0
-        String[] dayLabels = {"S", "S", "R", "K", "J", "S", "M"};
-
+        int[] sleepScores = new int[7]; // Default scores as 0
         for (DataTidur data : sleepData) {
-            int dayIndex = startDate.until(data.getTanggal()).getDays();
+            int dayIndex = (int) ChronoUnit.DAYS.between(startDate, data.getTanggal());
             if (dayIndex >= 0 && dayIndex < 7) {
                 sleepScores[dayIndex] = data.getSkor();
             }
         }
 
+        // Add attributes to the model
+        model.addAttribute("dateRange", startDate.format(formatter) + " - " + today.format(formatter));
         model.addAttribute("sleepScores", sleepScores);
         model.addAttribute("dayLabels", dayLabels);
+        model.addAttribute("fullDayLabels", fullDayLabels);
+        model.addAttribute("dateLabels", dateLabels);
 
         return "beranda";
     }
-    
 
     @GetMapping("/tips")
     public String tipsPage() {
@@ -161,6 +191,7 @@ public class BerandaController {
                 return "";
         }
     }
+
     @PostMapping("/api/add-start")
     @ResponseBody
     public ResponseEntity<String> addStart(@RequestBody LocalDateTime startTime) {
@@ -180,6 +211,7 @@ public class BerandaController {
         penggunaRepository.save(pengguna);
         return ResponseEntity.ok("End time and duration calculated successfully!");
     }
+
     // DTO for addEnd
     public static class AddEndRequest {
         private LocalDateTime endTime;
