@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -65,7 +67,7 @@ public class PenggunaController {
         // Check for username duplication
         Optional<Pengguna> existingPengguna = penggunaService.findByUsername(pengguna.getUsername());
         if (existingPengguna.isPresent()) {
-            errors.put("usernameError", "Username sudah dipakai. Silakan gunakan username lain");
+            errors.put("usernameError", "Username sudah dipakai. Silakan gunakan username lain.");
         }
 
         // Validate username
@@ -77,6 +79,19 @@ public class PenggunaController {
         // Validate password
         if (pengguna.getPassword() == null || pengguna.getPassword().length() < 4) {
             errors.put("passwordError", "Kata Sandi minimal 4 karakter.");
+        }
+
+        // Validate age (minimum 13 years old)
+        if (pengguna.getTanggalLahir() == null) {
+            errors.put("birthdateError", "Tanggal lahir harus diisi.");
+        } else {
+            LocalDate today = LocalDate.now();
+            LocalDate birthdate = pengguna.getTanggalLahir();
+            Period age = Period.between(birthdate, today);
+
+            if (age.getYears() < 13) {
+                errors.put("birthdateError", "Usia Anda harus minimal 13 tahun untuk mendaftar.");
+            }
         }
 
         // Check for errors
@@ -93,6 +108,7 @@ public class PenggunaController {
             return "register";
         }
     }
+
     @GetMapping("/hapus-data-tidur")
     public String hapusDataTidur(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

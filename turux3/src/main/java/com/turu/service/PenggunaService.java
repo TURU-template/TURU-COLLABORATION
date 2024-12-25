@@ -5,6 +5,8 @@ import com.turu.repository.PenggunaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,33 +30,28 @@ public class PenggunaService {
     }
 
     public void savePengguna(Pengguna pengguna) {
-        // Validasi username
-        if (!isValidUsername(pengguna.getUsername())) {
-            throw new IllegalArgumentException("Username tidak boleh kosong dan tidak boleh mengandung spasi.");
-        }
-
-        // Periksa duplikasi username
-        if (penggunaRepository.findByUsername(pengguna.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username sudah digunakan. Harap pilih username lain.");
-        }
-
-        // Validasi password
-        if (!isValidPassword(pengguna.getPassword())) {
-            throw new IllegalArgumentException("Password harus memiliki panjang minimal 4 karakter.");
-        }
         pengguna.setPassword(passwordEncoder.encode(pengguna.getPassword()));
         penggunaRepository.save(pengguna);
     }
 
-    private boolean isValidUsername(String username) {
-        // Username tidak boleh null, kosong, atau mengandung spasi
-        return username != null && !username.trim().isEmpty() && !username.contains(" ");
-    }
+    // private boolean isValidUsername(String username) {
+    //     // Username tidak boleh null, kosong, atau mengandung spasi
+    //     return username != null && !username.trim().isEmpty() && !username.contains(" ");
+    // }
 
-    private boolean isValidPassword(String password) {
-        // Password harus minimal 4 karakter
-        return password != null && password.length() >= 4;
-    }
+    // private boolean isValidPassword(String password) {
+    //     // Password harus minimal 4 karakter
+    //     return password != null && password.length() >= 4;
+    // }
+
+    // private boolean isValidAge(LocalDate birthdate) {
+    //     if (birthdate == null) {
+    //         return false; // Tanggal lahir harus diisi
+    //     }
+    //     LocalDate today = LocalDate.now();
+    //     Period age = Period.between(birthdate, today);
+    //     return age.getYears() >= 13;
+    // }
 
     public String login(String username, String password) {
         Optional<Pengguna> penggunaOptional = penggunaRepository.findByUsername(username);

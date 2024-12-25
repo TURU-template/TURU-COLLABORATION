@@ -18,100 +18,123 @@
 
 <body>
   <!-- Fixed Header -->
-  <div class="canvas-mobile radio">
-    <!-- Header Status -->
-    <header class="header">
-      <div class="date" id="currentDate">[Tanggal]</div>
-      <div class="time" id="currentTime">[WIB]</div>
-    </header>
+  <div class="row">
+    <div class="column main">
+      <div class="canvas-mobile radio">
+        <!-- Header Status -->
+        <header class="header">
+          <div class="date" id="currentDate">[Tanggal]</div>
+          <div class="time" id="currentTime">[WIB]</div>
+        </header>
 
-    <!-- CONTENT PAGE -->
-    <div class="content radio">
-      <h4 class="mb-4">Derau Warna</h4>
-      <!-- Buttons with data-color attributes -->
-      <button class="btn song-btn" id="white-btn" data-color="lilac" onclick="toggleAudio('white')">
-        White ⚪
-      </button>
+        <!-- CONTENT PAGE -->
+        <div class="content radio">
+          <h4 class="mb-4">Derau Warna</h4>
+          <!-- Buttons with data-color attributes -->
+          <button class="btn song-btn" id="white-btn" data-color="lilac" onclick="toggleAudio('white')">
+            White ⚪
+          </button>
 
-      <button class="btn song-btn" id="blue-btn" data-color="blue" onclick="toggleAudio('blue')">
-        Blue 🔵
-      </button>
+          <button class="btn song-btn" id="blue-btn" data-color="blue" onclick="toggleAudio('blue')">
+            Blue 🔵
+          </button>
 
-      <button class="btn song-btn" id="brown-btn" data-color="indigo" onclick="toggleAudio('brown')">
-        Brown 🟤
-      </button>
+          <button class="btn song-btn" id="brown-btn" data-color="indigo" onclick="toggleAudio('brown')">
+            Brown 🟤
+          </button>
 
-      <button class="btn song-btn" id="pink-btn" data-color="pink" onclick="toggleAudio('pink')">
-        Pink 🩷
-      </button>
+          <button class="btn song-btn" id="pink-btn" data-color="pink" onclick="toggleAudio('pink')">
+            Pink 🩷
+          </button>
 
-      <br><br><br>
-      <h4 class="mb-4">Suara Ambiens</h4>
-      <!-- Buttons with data-color attributes -->
-      <button class="btn song-btn" id="api-btn" data-color="pink" onclick="toggleAudio('api')">
-        Api 🔥
-      </button>
+          <br><br><br>
+          <h4 class="mb-4">Suara Ambiens</h4>
+          <!-- Buttons with data-color attributes -->
+          <button class="btn song-btn" id="api-btn" data-color="pink" onclick="toggleAudio('api')">
+            Api 🔥
+          </button>
 
-      <button class="btn song-btn" id="ombak-btn" data-color="blue" onclick="toggleAudio('ombak')">
-        Ombak 🌊
-      </button>
+          <button class="btn song-btn" id="ombak-btn" data-color="blue" onclick="toggleAudio('ombak')">
+            Ombak 🌊
+          </button>
 
-      <button class="btn song-btn" id="burung-btn" data-color="indigo" onclick="toggleAudio('burung')">
-        Burung 🐦
-      </button>
+          <button class="btn song-btn" id="burung-btn" data-color="indigo" onclick="toggleAudio('burung')">
+            Burung 🐦
+          </button>
 
-      <button class="btn song-btn" id="jangkrik-btn" data-color="lilac" onclick="toggleAudio('jangkrik')">
-        Jangkrik 🦗
-      </button>
+          <button class="btn song-btn" id="jangkrik-btn" data-color="lilac" onclick="toggleAudio('jangkrik')">
+            Jangkrik 🦗
+          </button>
 
-      <button class="btn song-btn" id="hujan-btn" data-color="blue" onclick="toggleAudio('hujan')">
-        Hujan 🌧️
-      </button>
+          <button class="btn song-btn" id="hujan-btn" data-color="blue" onclick="toggleAudio('hujan')">
+            Hujan 🌧️
+          </button>
 
-      <br><br><br>
-      <h4 class="mb-4"><i>Lo-Fi Music</i></h4>
-      <!-- Buttons with data-color attributes -->
-      <button class="btn song-btn" id="monoman-btn" data-color="blue" onclick="toggleAudio('monoman')">
-        Monoman 🎸
-      </button>
+          <br><br><br>
+          <h4 class="mb-4"><i>Lo-Fi Music</i></h4>
+          <!-- Buttons with data-color attributes -->
+          <button class="btn song-btn" id="monoman-btn" data-color="blue" onclick="toggleAudio('monoman')">
+            Monoman 🎸
+          </button>
 
-      <button class="btn song-btn" id="twilight-btn" data-color="indigo" onclick="toggleAudio('twilight')">
-        Twilight🎵
-      </button>
+          <button class="btn song-btn" id="twilight-btn" data-color="indigo" onclick="toggleAudio('twilight')">
+            Twilight🎵
+          </button>
 
-      <button class="btn song-btn" id="yasumu-btn" data-color="pink" onclick="toggleAudio('yasumu')">
-        Yasumu🎹
-      </button>
+          <button class="btn song-btn" id="yasumu-btn" data-color="pink" onclick="toggleAudio('yasumu')">
+            Yasumu🎹
+          </button>
+        </div>
+
+        <!-- Floating Button -->
+        <button class="floating-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <i class="bi bi bi-stopwatch"></i> Timer
+        </button>
+
+        <!-- Sticky Bottom Navbar -->
+        <nav class="navbar navbar-expand navbar-dark">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/beranda}">
+                <span class="bi bi-grid-fill nav-icon"></span>
+                Beranda
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/radio}">
+                <i class="bi bi-music-note nav-icon"></i>
+                Radio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/akun}">
+                <i class="bi bi-person-fill nav-icon"></i>
+                Akun
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
-
-    <!-- Floating Button -->
-    <button class="floating-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      <i class="bi bi bi-stopwatch"></i> Timer
-    </button>
-
-    <!-- Sticky Bottom Navbar -->
-    <nav class="navbar navbar-expand navbar-dark">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/beranda}">
-            <span class="bi bi-grid-fill nav-icon"></span>
-            Beranda
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" th:href="@{/radio}">
-            <i class="bi bi-music-note nav-icon"></i>
-            Radio
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/akun}">
-            <i class="bi bi-person-fill nav-icon"></i>
-            Akun
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <div class="column creators middle">
+      <br><br><br>
+      <h2><b>Turu</b>- <i>Aplikasi Monitoring Tidur</i></h2>
+      <br>
+      <samp>Creators:</samp>
+      <div class="creator">
+        <p th:each="creator : ${creators}">
+          <span th:text="${creator.icon}">Icon</span>
+          <a th:href="${creator.link}" th:text="${creator.name}" target="_blank">Name</a>
+        </p>
+      </div>
+    </div>
+    <div class="column qr middle center">
+      <br><br><br>
+      <img src="../asset/QR_Github_Turu.png">
+      <br><br><br>
+      <h5>Scan to <a href="https://github.com/TURU-template/TURU-COLLABORATION/" target="_blank"
+          style="text-decoration: underline;">Get Turu!</a> 😴</h5>
+    </div>
   </div>
 
   <script src="js/scriptHeader.js"></script>

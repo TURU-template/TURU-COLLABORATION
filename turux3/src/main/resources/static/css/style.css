@@ -65,10 +65,8 @@ body.login {
     scroll-behavior: smooth;
     scrollbar-width: none; 
     scrollbar-color: var(--indigo) transparent;
-    z-index: 2;
+    z-index: 5 !important;
 }
-
-
 
 .canvas-mobile > .content {
     flex: 1; /* Allow content to take up remaining space */
@@ -185,12 +183,58 @@ a.nav-link{
 }
 
 /*==========BERANDA==========*/
+.column{
+  float: left;
+  width: 33.33%;
+  height: 100vh;
+}
+
+.column.creators{order: 1;}
+.column.main{order: 2;}
+.column.qr{order: 3;}
+
+.column.creators, .column.qr{
+  z-index: 2;
+  padding: 0pt 100pt;
+  font-size: 14pt;
+  color: var(--text-color) !important;
+}
+
+.column.qr img {
+  max-width: 200px; /* Adjust size for responsiveness */
+  height: auto;
+  border-radius: 8pt;
+  /* background-image: url("../asset/QR_Github_Turu.svg"); */
+}
+
+.column a{
+  color: var(--text-color) !important;
+  text-decoration: none;
+  /* transition: 1s; */
+}
+
+.column.creators a:hover, .column.qr a:hover{
+  color: var(--text-color);
+  text-decoration: underline;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.creator p{
+  padding: 4pt 8pt;
+  margin-bottom: 0rem !important;
+}
+
 .center{
     text-align: center !important;
     align-items: center !important;
     justify-content: center !important;
     justify-self: center !important;
     justify-items: center !important;
+}
+
+.middle{
+  align-content: center !important;
 }
 
 .turu-button {
@@ -540,6 +584,16 @@ a.nav-link{
     position: absolute;
     border-radius: 50%;
     z-index: 1; /* Below canvas-mobile */
+}
+
+@media screen and (max-width: 1300px) {
+  .column.main{
+    width: 100% !important;
+  }
+
+  .column.creators, .column.qr{
+    display: none;
+  }
 }
 
 /*========== SCROLL ==========*/

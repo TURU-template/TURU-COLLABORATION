@@ -23,61 +23,27 @@ public class DataTidur {
     @JoinColumn(name = "statistik_id")
     private Statistik statistik;
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public LocalDateTime getWaktuMulai() {return waktuMulai;}
+    public void setWaktuMulai(LocalDateTime waktuMulai) {this.waktuMulai = waktuMulai;}
 
-    public LocalDateTime getWaktuMulai() {
-        return waktuMulai;
-    }
+    public LocalDateTime getWaktuSelesai() {return waktuSelesai;}
+    public void setWaktuSelesai(LocalDateTime waktuSelesai) {this.waktuSelesai = waktuSelesai;}
 
-    public void setWaktuMulai(LocalDateTime waktuMulai) {
-        this.waktuMulai = waktuMulai;
-    }
+    public LocalDate getTanggal() {return tanggal;}
+    public void setTanggal(LocalDate tanggal) {this.tanggal = tanggal;}
 
-    public LocalDateTime getWaktuSelesai() {
-        return waktuSelesai;
-    }
+    public LocalTime getDurasi() {return durasi;}
+    public void setDurasi(LocalTime durasi) {this.durasi = durasi;}
 
-    public void setWaktuSelesai(LocalDateTime waktuSelesai) {
-        this.waktuSelesai = waktuSelesai;
-    }
+    public int getSkor() {return skor;}
+    public void setSkor(int skor) {this.skor = skor;}
+    public Statistik getStatistik() {return statistik;}
 
-    public LocalDate getTanggal() {
-        return tanggal;
-    }
-
-    public void setTanggal(LocalDate tanggal) {
-        this.tanggal = tanggal;
-    }
-
-    public LocalTime getDurasi() {
-        return durasi;
-    }
-
-    public void setDurasi(LocalTime durasi) {
-        this.durasi = durasi;
-    }
-
-    public int getSkor() {
-        return skor;
-    }
-
-    public void setSkor(int skor) {
-        this.skor = skor;
-    }
-    public Statistik getStatistik() {
-        return statistik;
-    }
-
-    public void setStatistik(Statistik statistik) {
-        this.statistik = statistik;
-    }
-
+    public void setStatistik(Statistik statistik) {this.statistik = statistik;}
+    
     public void hitungDurasi() {
         LocalDateTime adjustedWaktuSelesai = waktuSelesai;
         if (waktuSelesai.isBefore(waktuMulai)) {

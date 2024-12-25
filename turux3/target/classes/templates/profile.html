@@ -11,65 +11,88 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <!-- Icon Asset -->
   <link rel="stylesheet" href="css/style.css"> <!-- Style Utama -->
-  
+
 </head>
 
 <body>
-  <!-- Profil -->
-  <div class="canvas-mobile">
-    <header class="header">
-      <div class="date" id="currentDate">[Tanggal]</div>
-      <div class="time" id="currentTime">[WIB]</div>
-    </header>
-    <br>
-    <div class="profile">
-      <div class="avatar">
-        <img src="Turu.ico" class="avatar-img" alt="🤤">
-      </div>
-      <div class="profile-info">
-        <h1 th:text="${pengguna.username}">Nama Pengguna</h1>
-        <p th:text="${pengguna.jk == 'L' ? 'Laki-laki' : 'Perempuan'}">Jenis Kelamin</p>
-        <p th:text="${pengguna.tanggalLahir}">Tanggal Lahir</p>
-      </div>
+  <!-- Fixed Header -->
+  <div class="row">
+    <div class="column main">
+      <div class="canvas-mobile">
+        <header class="header">
+          <div class="date" id="currentDate">[Tanggal]</div>
+          <div class="time" id="currentTime">[WIB]</div>
+        </header>
+        <br>
+        <div class="profile">
+          <div class="avatar">
+            <img src="Turu.ico" class="avatar-img" alt="🤤">
+          </div>
+          <div class="profile-info">
+            <h1 th:text="${pengguna.username}">Nama Pengguna</h1>
+            <p th:text="${pengguna.jk == 'L' ? 'Laki-laki' : 'Perempuan'}">Jenis Kelamin</p>
+            <p th:text="${pengguna.tanggalLahir}">Tanggal Lahir</p>
+          </div>
 
+        </div>
+
+        <!-- Pengaturan -->
+        <div class="settings">
+          <h2>Pengaturan</h2>
+          <div class="setting-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="bi bi-trash3"></i>
+            <span>Hapus Rekaman Tidur</span>
+          </div>
+          <div class="setting-item" data-bs-toggle="modal" data-bs-target="#logoutModal">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Keluar Akun</span>
+          </div>
+        </div>
+
+        <!-- Sticky Bottom Navbar -->
+        <nav class="navbar navbar-expand navbar-dark">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/beranda}">
+                <i class="bi bi-grid-fill nav-icon"></i>
+                Beranda
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/radio}">
+                <i class="bi bi-music-note nav-icon"></i>
+                Radio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/akun}">
+                <i class="bi bi-person-fill nav-icon"></i>
+                Akun
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
-
-    <!-- Pengaturan -->
-    <div class="settings">
-      <h2>Pengaturan</h2>
-      <div class="setting-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
-        <i class="bi bi-trash3"></i>
-        <span>Hapus Rekaman Tidur</span>
-      </div>
-      <div class="setting-item" data-bs-toggle="modal" data-bs-target="#logoutModal">
-        <i class="bi bi-box-arrow-left"></i>
-        <span>Keluar Akun</span>
+    <div class="column creators middle">
+      <br><br><br>
+      <h2><b>Turu</b>- <i>Aplikasi Monitoring Tidur</i></h2>
+      <br>
+      <samp>Creators:</samp>
+      <div class="creator">
+        <p th:each="creator : ${creators}">
+          <span th:text="${creator.icon}">Icon</span>
+          <a th:href="${creator.link}" th:text="${creator.name}" target="_blank">Name</a>
+        </p>
       </div>
     </div>
-
-    <!-- Sticky Bottom Navbar -->
-    <nav class="navbar navbar-expand navbar-dark">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/beranda}">
-            <i class="bi bi-grid-fill nav-icon"></i>
-            Beranda
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/radio}">
-            <i class="bi bi-music-note nav-icon"></i>
-            Radio
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" th:href="@{/akun}">
-            <i class="bi bi-person-fill nav-icon"></i>
-            Akun
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <div class="column qr middle center">
+      <br><br><br>
+      <img src="../asset/QR_Github_Turu.png">
+      <br><br><br>
+      <h5>Scan to <a href="https://github.com/TURU-template/TURU-COLLABORATION/" target="_blank"
+          style="text-decoration: underline;">Get Turu!</a> 😴</h5>
+    </div>
   </div>
 
   <!-- Modal Hapus Data Tidur -->
@@ -110,7 +133,7 @@
     // Logika untuk Hapus Data Tidur
     document.getElementById('confirmDelete').addEventListener('click', function () {
       alert('Data tidur telah dihapus.');
-      window.location.href ='/hapus-data-tidur'
+      window.location.href = '/hapus-data-tidur'
     });
 
     document.getElementById('confirmLogout').addEventListener('click', function () {
