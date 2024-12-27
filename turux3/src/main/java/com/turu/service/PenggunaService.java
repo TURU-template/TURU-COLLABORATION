@@ -34,25 +34,6 @@ public class PenggunaService {
         penggunaRepository.save(pengguna);
     }
 
-    // private boolean isValidUsername(String username) {
-    //     // Username tidak boleh null, kosong, atau mengandung spasi
-    //     return username != null && !username.trim().isEmpty() && !username.contains(" ");
-    // }
-
-    // private boolean isValidPassword(String password) {
-    //     // Password harus minimal 4 karakter
-    //     return password != null && password.length() >= 4;
-    // }
-
-    // private boolean isValidAge(LocalDate birthdate) {
-    //     if (birthdate == null) {
-    //         return false; // Tanggal lahir harus diisi
-    //     }
-    //     LocalDate today = LocalDate.now();
-    //     Period age = Period.between(birthdate, today);
-    //     return age.getYears() >= 13;
-    // }
-
     public String login(String username, String password) {
         Optional<Pengguna> penggunaOptional = penggunaRepository.findByUsername(username);
 

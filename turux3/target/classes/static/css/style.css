@@ -297,7 +297,7 @@ a.nav-link{
     min-width: 80px;
     bottom: 120px;
     right: 32px;
-    background-color: var(--pink, #DA5798); /* Use your CSS variable or fallback color */
+    background-color: var(--pink); /* Use your CSS variable or fallback color */
     color: white;
     border: none;
     border-radius: 12px;
@@ -402,6 +402,62 @@ a.nav-link{
 .song-btn.active {
     color: white !important;
     background: currentColor; /* Matches the border color */
+}
+
+/* Sleep Timer */
+.btn-timer {
+  background-color: #ff69b4;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-timer:hover {
+  background-color: #ff85c2;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.btn-timer i {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.btn-timer-option {
+  background-color: var(--pink);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-timer-option:hover, .btn-timer-option:active {
+  background-color: #C94B89;
+}
+
+#timer-options {
+  display: none;
+  flex-direction: row;
+  gap: 16px;
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  margin-right: 120px;
+  margin-bottom: 40px;
 }
 
 

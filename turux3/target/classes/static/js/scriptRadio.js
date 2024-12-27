@@ -113,11 +113,6 @@ function handleHover(button, isHovered) {
     const colorVar = `--${button.dataset.color}`;
     const hoverColor = getComputedStyle(document.documentElement).getPropertyValue(colorVar);
     button.style.setProperty('--button-border-color', hoverColor);
-    
-    // if (isHovered) {
-    // } else {
-    //     button.style.setProperty('--button-border-color', hoverColor);
-    // }
 }
 
 // Attach hover event listeners
@@ -135,3 +130,55 @@ window.onload = () => {
     attachHoverListeners();
     restorePlaybackState(); // Restore audio state if needed
 };
+
+
+// ======================= SLEEP TIMER =============================
+function showTimerOptions() {
+    const timerOptions = document.getElementById("timer-options");
+    timerOptions.style.display = timerOptions.style.display === "flex" ? "none" : "flex";
+}
+
+// Set a timer and shut down audio when the timer ends
+function setTimer(menit) {
+    showAlert(`Sleep Timer dengan durasi ${menit} menit!`, "success", 5000);
+    document.getElementById("timer-options").style.display = "none";
+
+    setTimeout(() => {
+        shutdownAudio();
+        showAlert("Sleep Timer selesai, musik berhenti", "danger", 5000);
+    }, menit * 60000); // kalau menit 60000, detik 1000
+}
+
+// Function to stop all audio playback
+function shutdownAudio() {
+    if (!audioElement.paused) {
+        audioElement.pause(); // Pause the audio
+        audioElement.currentTime = 0; // Reset the playback time
+        if (currentTrackKey) {
+            const button = document.getElementById(`${currentTrackKey}-btn`);
+            setButtonState(button, false); // Reset button state
+        }
+        currentTrackKey = null; // Reset the current track key
+    }
+}
+
+function showAlert(message, alertType = "danger", duration = 3000) {
+    const alertContainer = document.getElementById("alert-container");
+    const alertElement = document.createElement("div");
+    alertElement.className = `alert alert-${alertType} d-flex align-items-center fade show`;
+    alertElement.setAttribute("role", "alert");
+
+    alertElement.innerHTML = `
+        <i class="bi bi-stopwatch flex-shrink-0 me-2" style="font-size: 1.5rem;"></i>
+        <div>${message}</div>
+    `;
+
+    alertContainer.appendChild(alertElement);
+
+    setTimeout(() => {
+        alertElement.classList.remove("show");
+        alertElement.classList.add("hide");
+        setTimeout(() => alertElement.remove(), 300);
+    }, duration);
+}
+
