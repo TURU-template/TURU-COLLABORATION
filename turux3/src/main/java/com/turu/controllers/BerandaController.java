@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
 import com.turu.service.DataTidurService;
 import com.turu.model.DataTidur;
@@ -189,5 +190,29 @@ public class BerandaController {
         public void setEndTime(LocalDateTime endTime) {
             this.endTime = endTime;
         }
+    }
+
+    @GetMapping("/api/data-skor")
+    @ResponseBody
+    public ResponseEntity<List<Integer>> getWeeklySleepScores() {
+        // Ambil data tidur mingguan berdasarkan pengguna yang sedang login
+        Pengguna pengguna = getLoggedInPengguna();
+        LocalDate today = LocalDate.now();
+        List<DataTidur> sleepData = dataTidurService.getDataTidurMingguan(today.minusDays(6), today);
+
+        int[] sleepScores = new int[7]; // Default 0
+        for (DataTidur data : sleepData) {
+            int dayIndex = today.minusDays(6).until(data.getTanggal()).getDays();
+            if (dayIndex >= 0 && dayIndex < 7) {
+                sleepScores[dayIndex] = data.getSkor();
+            }
+        }
+
+        // Kembalikan data skor tidur mingguan dalam format JSON
+        List<Integer> weeklyScores = new ArrayList<>();
+        for (int score : sleepScores) {
+            weeklyScores.add(score);
+        }
+        return ResponseEntity.ok(weeklyScores);
     }
 }
