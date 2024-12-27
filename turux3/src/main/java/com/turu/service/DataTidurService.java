@@ -47,4 +47,9 @@ public class DataTidurService {
         }
     }
 
+    public List<Object[]> getSkorByTanggalAndPengguna(Long penggunaId) {
+        return dataTidurRepository.findSkorByTanggalAndPenggunaId(penggunaId);
+    }
+    
+
 }
