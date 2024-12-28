@@ -19,4 +19,6 @@ public interface DataTidurRepository extends JpaRepository<DataTidur, Long> {
     // Query untuk mendapatkan skor berdasarkan pengguna dan tanggal, diurutkan
     @Query("SELECT d.tanggal, d.skor FROM DataTidur d WHERE d.pengguna.id = :penggunaId ORDER BY d.tanggal")
     List<Object[]> findSkorByTanggalAndPenggunaId(@Param("penggunaId") Long penggunaId);
+
+    List<DataTidur> findByPenggunaAndTanggalBetween(Pengguna pengguna, LocalDate startDate, LocalDate endDate);
 }

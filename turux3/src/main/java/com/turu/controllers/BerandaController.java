@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import com.turu.service.DataTidurService;
@@ -72,31 +73,31 @@ public class BerandaController {
         }else {
             model.addAttribute("state", true);
         }
-        
-        
-
+        Pengguna pengguna = getLoggedInPengguna();  // Mendapatkan pengguna yang sedang login
         LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(6);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        String dateRange = startDate.format(formatter) + " - " + today.format(formatter);
+        model.addAttribute("dateRange", dateRange);
 
-        List<DataTidur> sleepData = dataTidurService.getDataTidurMingguan(today.minusDays(6), today);
+        // Ambil data tidur yang hanya milik pengguna yang sedang login
+        List<DataTidur> sleepData = dataTidurService.getDataTidurMingguan(startDate, today, pengguna);
 
-        
         int[] sleepScores = new int[7]; // Default 0
         String[] dayLabels = {"S", "S", "R", "K", "J", "S", "M"};
 
-       
         for (DataTidur data : sleepData) {
-            int dayIndex = today.minusDays(6).until(data.getTanggal()).getDays();
+            int dayIndex = startDate.until(data.getTanggal()).getDays();
             if (dayIndex >= 0 && dayIndex < 7) {
                 sleepScores[dayIndex] = data.getSkor();
             }
         }
 
-    
         model.addAttribute("sleepScores", sleepScores);
         model.addAttribute("dayLabels", dayLabels);
 
-        return "beranda"; // Thymeleaf template
+        return "beranda";
     }
     
 
@@ -192,27 +193,4 @@ public class BerandaController {
         }
     }
 
-    @GetMapping("/api/data-skor")
-    @ResponseBody
-    public ResponseEntity<List<Integer>> getWeeklySleepScores() {
-        // Ambil data tidur mingguan berdasarkan pengguna yang sedang login
-        Pengguna pengguna = getLoggedInPengguna();
-        LocalDate today = LocalDate.now();
-        List<DataTidur> sleepData = dataTidurService.getDataTidurMingguan(today.minusDays(6), today);
-
-        int[] sleepScores = new int[7]; // Default 0
-        for (DataTidur data : sleepData) {
-            int dayIndex = today.minusDays(6).until(data.getTanggal()).getDays();
-            if (dayIndex >= 0 && dayIndex < 7) {
-                sleepScores[dayIndex] = data.getSkor();
-            }
-        }
-
-        // Kembalikan data skor tidur mingguan dalam format JSON
-        List<Integer> weeklyScores = new ArrayList<>();
-        for (int score : sleepScores) {
-            weeklyScores.add(score);
-        }
-        return ResponseEntity.ok(weeklyScores);
-    }
 }

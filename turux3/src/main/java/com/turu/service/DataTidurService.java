@@ -23,8 +23,8 @@ public class DataTidurService {
         dt.setIdPengguna(pengguna);
         dataTidurRepository.save(dt);
     }
-    public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate) {
-        return dataTidurRepository.findByTanggalBetween(startDate, endDate);
+    public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate, Pengguna pengguna) {
+        return dataTidurRepository.findByPenggunaAndTanggalBetween(pengguna, startDate, endDate);
     }
     public DataTidur cariTerbaruDataTidur(Pengguna pengguna) {
         return dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
