@@ -12,7 +12,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -85,6 +85,8 @@ public class BerandaController {
         LocalDate startDate = today.minusDays(6);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd, MMMM yyyy");
+
         String[] fullDayLabels = new String[7];
         String[] dateLabels = new String[7];
         String[] dayLabels = new String[7];
@@ -122,7 +124,7 @@ public class BerandaController {
         }
 
         // Add attributes to the model
-        model.addAttribute("dateRange", startDate.format(formatter) + " - " + today.format(formatter));
+        model.addAttribute("dateRange", startDate.format(formatter2) + " - Hari Ini");
         model.addAttribute("sleepScores", sleepScores);
         model.addAttribute("dayLabels", dayLabels);
         model.addAttribute("fullDayLabels", fullDayLabels);

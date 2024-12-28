@@ -73,7 +73,7 @@
 
           <br><br><br><br>
           <div class="subtitle">Statistik Tidur</div>
-          <div class="result" id="rangeWeek" th:text="${dateRange}">16 Desember 2024 - 22 Desember 2024</div>
+          <div class="result" id="rangeWeek" th:text="${dateRange}">Data 7 Hari terakhir</div>
 
           <!-- Tambahkan Chart Tidur Mingguan -->
           <canvas id="sleepChart"></canvas>
@@ -194,6 +194,7 @@
     var dayLabels = /*[[${dayLabels}]]*/[];
     var fullDayLabels = /*[[${fullDayLabels}]]*/[];
     var dateLabels = /*[[${dateLabels}]]*/[];
+    var todayIndex = 6;
 
     let ctx = document.getElementById("sleepChart").getContext("2d");
 
@@ -206,7 +207,6 @@
             label: "Skor Tidur",
             data: sleepScores,
             backgroundColor: "#8c4fc2",
-            borderColor: "#8c4fc2",
             borderWidth: 1,
           },
         ],
@@ -214,7 +214,10 @@
       options: {
         plugins: {
           legend: {
-            position: 'bottom' // Move legend to the bottom
+            position: 'bottom',
+            labels: {
+              color: "#b6b6b6",
+            }
           },
           tooltip: {
             callbacks: {
@@ -240,10 +243,30 @@
           }
         },
         scales: {
+          x: {
+            ticks: {
+              color: function (context) {
+                return context.index === todayIndex ? '#fff' : '#b6b6b6';
+              },
+              font: {
+                weight: function (context) {
+                  // Apply bold font only for today's label
+                  return context.index === todayIndex ? 'bolder' : 'normal';
+                },
+              }
+            }
+          },
           y: {
             beginAtZero: true,
-            max: 100 // Max score 100
+            max: 100, // Max score 100
+            ticks: {
+              color: "#b6b6b6", // Y-axis label color
+            },
           }
+        },
+        animation: {
+          duration: 1500, // Animation duration in milliseconds
+          easing: "easeInSine", // Easing type
         }
       },
       plugins: [ChartDataLabels] // Include Data Labels plugin
