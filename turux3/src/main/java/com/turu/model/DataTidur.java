@@ -19,9 +19,6 @@ public class DataTidur {
     @JoinColumn(name = "pengguna_id", nullable = false)
     private Pengguna pengguna;
 
-    @ManyToOne
-    @JoinColumn(name = "statistik_id")
-    private Statistik statistik;
 
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
@@ -40,9 +37,6 @@ public class DataTidur {
 
     public int getSkor() {return skor;}
     public void setSkor(int skor) {this.skor = skor;}
-    public Statistik getStatistik() {return statistik;}
-
-    public void setStatistik(Statistik statistik) {this.statistik = statistik;}
     
     public void hitungDurasi() {
         LocalDateTime adjustedWaktuSelesai = waktuSelesai;
