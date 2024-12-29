@@ -44,7 +44,7 @@ public class DataTidur {
         }
         Duration duration = Duration.between(waktuMulai, adjustedWaktuSelesai);
         if (duration.getSeconds() >= 86400){
-            duration.ofSeconds(86399);
+            duration = Duration.ofSeconds(86399);
         }
         setDurasi(LocalTime.ofSecondOfDay(duration.getSeconds()));
     }
