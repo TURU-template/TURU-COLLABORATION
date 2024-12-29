@@ -88,6 +88,7 @@ public class BerandaController {
         }
 
         DataTidur latestSleep = dataTidurService.cariTerbaruDataTidur(pengguna);
+        model.addAttribute("dataTidur", latestSleep);
         if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
             // Calculate age
             int age = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();

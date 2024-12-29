@@ -43,7 +43,7 @@
             Mulai:
           </div>
           <div class="result" id="durationDisplay"> </div>
-          
+
           <br><br><br><br><br><br>
           <div class="subtitle">
             Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
@@ -135,11 +135,11 @@
                 <form id="dataTidurForm" method="POST" action="/editTidur">
                   <div class="mb-3">
                     <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
-                    <input type="datetime-local" class="form-control" name="waktuMulai" id="waktuMulai" th:value="${waktuMulaiFormatted}" required>
+                    <input type="datetime-local" class="form-control" id="waktuMulai" name="waktuMulai" th:value="${waktuMulaiFormatted}"  required>
                   </div>
                   <div class="mb-3">
                     <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
-                    <input type="datetime-local" class="form-control" name="waktuSelesai" id="waktuSelesai" th:value="${waktuSelesaiFormatted}" required>
+                    <input type="datetime-local" class="form-control" id="waktuSelesai" name="waktuSelesai" th:value="${waktuSelesaiFormatted}" required>
                   </div>
                   <br><br>
                   <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
