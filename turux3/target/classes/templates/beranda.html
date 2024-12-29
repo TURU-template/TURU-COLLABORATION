@@ -54,16 +54,15 @@
 
 
           <br><br><br><br>
-          <div class="subtitle">Skor Tidur</div>
           <!-- Character Display -->
+          <div class="subtitle">Skor Tidur</div>
           <div class="row">
-            <div class="col result" id="mascotDisplay">🐨</div>
-            <div class="col result" id="scoreDisplay">69</div>
+            <div class="col result" id="mascotDisplay" th:text="${mascot}">😴</div>
+            <div class="col result" id="scoreDisplay" th:text="${sleepScore}">-</div>
           </div>
-          <h3 class="result" id="mascotNameDisplay">Koala Pemalas</h3>
-          <div class="result" id="mascotDescriptionDisplay">Anda telah tidur lebih dari 12 jam, tidur Anda melebihi
-            batas
-            normal.
+          <h3 class="result" id="mascotNameDisplay" th:text="${mascotName}">Belum ada data</h3>
+          <div class="result" id="mascotDescriptionDisplay" th:text="${mascotDescription}">
+            Mulai tidur untuk melihat maskot Anda
           </div>
 
           <br><br><br><br>

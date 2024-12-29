@@ -82,6 +82,68 @@ public class BerandaController {
             model.addAttribute("buttonLabel", "Tombol Tidur");
         }
 
+        DataTidur latestSleep = dataTidurService.cariTerbaruDataTidur(pengguna);
+        if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
+            // Calculate age
+            int age = Period.between(pengguna.getTanggalLahir(), LocalDate.now()).getYears();
+
+            // Determine min and max hours based on age
+            double minHours;
+            double maxHours;
+
+            if (age <= 17) {
+                minHours = 8;
+                maxHours = 10;
+            } else if (age >= 18 && age <= 64) {
+                minHours = 7;
+                maxHours = 9;
+            } else {
+                minHours = 7;
+                maxHours = 8;
+            }
+
+            // Get sleep duration in hours using the existing durasi field
+            LocalTime durasi = latestSleep.getDurasi();
+            double sleepHours = durasi.getHour() + (durasi.getMinute() / 60.0);
+
+            // Get start time hour for owl condition
+            int startHour = latestSleep.getWaktuMulai().getHour();
+
+            String mascot;
+            String mascotName;
+            String mascotDescription;
+
+            // Determine mascot based on conditions
+            if (startHour >= 1 && startHour <= 13) {
+                mascot = "🦉";
+                mascotName = "Burung Hantu";
+                mascotDescription = String.format("Anda telah tidur %.1f jam, tetapi tidur anda terbalik", sleepHours);
+            } else if (sleepHours >= minHours && sleepHours <= maxHours) {
+                mascot = "🦁";
+                mascotName = "Singa";
+                mascotDescription = "Anda telah tidur sesuai anjuran. Tidur Anda ideal";
+            } else if (sleepHours > maxHours) {
+                mascot = "🐨";
+                mascotName = "Koala Pemalas";
+                mascotDescription = "Anda telah tidur melebihi anjuran, tidur Anda berlebihan";
+            } else {
+                mascot = "🦈";
+                mascotName = "Hiu";
+                mascotDescription = "Anda telah tidur di bawah anjuran, tidur Anda kurang";
+            }
+
+            // Add mascot and sleep data attributes to model
+            model.addAttribute("mascot", mascot);
+            model.addAttribute("mascotName", mascotName);
+            model.addAttribute("mascotDescription", mascotDescription);
+            model.addAttribute("sleepScore", latestSleep.getSkor());
+        } else {
+            // Default values if no sleep data is available
+            model.addAttribute("mascot", "😴");
+            model.addAttribute("mascotName", "Belum ada data");
+            model.addAttribute("mascotDescription", "Silakan klik Tombol Tidur untuk mulai memonitoring tidur Anda");
+            model.addAttribute("sleepScore", "-");
+        }
         // STATISTIK
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(6);
