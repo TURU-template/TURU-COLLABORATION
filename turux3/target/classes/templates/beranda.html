@@ -29,33 +29,28 @@
         </header>
         <!-- CONTENT PAGE -->
         <div class="content beranda center">
-          <div class="center" th:if="${state}">
-            <button id="stopwatchBtn" class="turu-button">😴</button>
+          <!-- <div class="center" th:if="${state}"> -->
+          <div class="center">
+            <button id="stopwatchBtn" class="turu-button" th:text="${state} ? '😴' : '🙂'">🙂</button>
             <br>
-            <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Bangun</h4>
+            <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
           </div>
-          <div class="center" th:unless="${state}">
-            <button id="stopwatchBtn" class="turu-button">🙂</button>
-            <br>
-            <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Tidur</h4>
+          <div id="stateContainer" th:data-state="${state}" th:data-start-time="${startTime}"></div>
+
+          <!-- Timestamp and Duration Display -->
+          <div class="result" id="timestampDisplay"
+            th:text="${state} ? 'Mulai: ' + ${startTime} : 'Klik tombol untuk memulai'">
+            Mulai:
           </div>
-          <div id="stateContainer" th:data-state="${state}"> </div>
+          <div class="result" id="durationDisplay"> </div>
 
-
-          <!-- Button Tips -->
-          <a href="/tips" class="btn btn-outline-light btn-sm tips-button">
-            <i class="bi bi-moon-stars-fill"></i>
-            &nbsp;Tips Tidur
-          </a>
-
+          <br><br><br><br><br><br>
           <div class="subtitle">
             Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
               id="editData">&#9998; </button>
-
-
           </div>
-          <div class="result" id="timestampDisplay">Mulai: 17:49:28 - Selesai: 17:49:29</div>
-          <div class="result" id="durationDisplay">13 j 20m</div>
+          <div class="result" id="timestampDisplay">29/12/24 22:11 — 30/12/24 06:11</div>
+          <div class="result" id="durationDisplay">8 j 20m</div>
 
 
           <br><br><br><br>
@@ -77,6 +72,12 @@
 
           <!-- Tambahkan Chart Tidur Mingguan -->
           <canvas id="sleepChart"></canvas>
+
+          <!-- Button Tips -->
+          <a href="/tips" class="btn btn-outline-light btn-sm tips-button">
+            <i class="bi bi-moon-stars-fill"></i>
+            &nbsp;Tips Tidur
+          </a>
         </div>
 
         <!-- Floating Button -->
@@ -303,6 +304,16 @@
       plugins: [ChartDataLabels] // Include Data Labels plugin
     });
   </script>
+  <script>
+    function logTimestamp() {
+      const localTime = new Date();
+      console.log("Local Timestamp: ", localTime.toString());
+    }
+
+    // Call the function to log the timestamp
+    logTimestamp();
+  </script>
+
 </body>
 
 </html>

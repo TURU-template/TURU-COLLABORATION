@@ -271,7 +271,6 @@ a.nav-link{
 
 .tips-button {
     margin-top: 32%;
-    margin-bottom: 75%;
     background-color: var(--indigo); /* Warna ungu selaras dengan tema */
     color: #fff !important; /* Warna teks putih */
     border: none;
@@ -640,6 +639,24 @@ a.nav-link{
     border-radius: 50%;
     z-index: 1; /* Below canvas-mobile */
 }
+
+.blinking {
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
 
 @media screen and (max-width: 1300px) {
   .column.main{

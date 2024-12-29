@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @Service
 public class DataTidurService {
     DataTidur dt = new DataTidur();
@@ -26,26 +27,33 @@ public class DataTidurService {
         }
     }
 
-    //TIDUR
-    public void addStart(LocalDateTime time, Pengguna pengguna ){
-        dt.setWaktuMulai(time);
+    // TIDUR
+    public void addStart(LocalDateTime time, Pengguna pengguna) {
+        // Tambahkan 7 jam ke waktu mulai
+        LocalDateTime adjustedTime = time.plusHours(7);
+
+        dt.setWaktuMulai(adjustedTime); // Gunakan waktu yang sudah diubah
         dt.setIdPengguna(pengguna);
         dataTidurRepository.save(dt);
     }
-    
-    public void addEnd(LocalDateTime time, Pengguna pengguna){
+
+    public void addEnd(LocalDateTime time, Pengguna pengguna) {
+        // Tambahkan 7 jam ke waktu selesai
+        LocalDateTime adjustedTime = time.plusHours(7);
+
         DataTidur dt = cariTerbaruDataTidur(pengguna);
-        dt.setWaktuSelesai(time);
-        dt.setTanggal(time.toLocalDate());
+        dt.setWaktuSelesai(adjustedTime); // Gunakan waktu yang sudah diubah
+        dt.setTanggal(adjustedTime.toLocalDate());
         dt.hitungDurasi();
         dt.hitungSkor(Period.between(pengguna.getTanggalLahir(), LocalDate.now()).getYears());
         dataTidurRepository.save(dt);
     }
-    
-    //STATISTIK
+
+    // STATISTIK
     public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate, Pengguna pengguna) {
         return dataTidurRepository.findByPenggunaAndTanggalBetween(pengguna, startDate, endDate);
     }
+
     public DataTidur cariTerbaruDataTidur(Pengguna pengguna) {
         return dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
     }

@@ -28,7 +28,6 @@ public class Pengguna {
     @OneToMany(mappedBy = "pengguna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DataTidur> dataTidurList = new ArrayList<>();
 
-
     public int getId() {
         return id;
     }
@@ -85,5 +84,3 @@ public class Pengguna {
     }
 
 }
-
-

@@ -4,6 +4,9 @@ import com.turu.model.Creator;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @ControllerAdvice
@@ -20,5 +23,11 @@ public class GlobalModelAttributes {
             new Creator("😻", "Audrey", "https://instagram.com/audreyathl"),
             new Creator("🐺", "Aisya", "https://instagram.com/aisyasfya")
         );
+    }
+
+    @ModelAttribute("currentDateTimeWIB")
+    public LocalDateTime getCurrentDateTimeInWIB() {
+        // Get the current time and convert it to GMT+7 (Asia/Jakarta)
+        return ZonedDateTime.now(ZoneId.of("Asia/Jakarta")).toLocalDateTime();
     }
 }

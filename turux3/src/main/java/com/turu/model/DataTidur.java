@@ -19,7 +19,6 @@ public class DataTidur {
     @JoinColumn(name = "pengguna_id", nullable = false)
     private Pengguna pengguna;
 
-
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
 

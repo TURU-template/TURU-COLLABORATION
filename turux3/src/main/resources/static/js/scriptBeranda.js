@@ -1,15 +1,50 @@
-// =========STOPWATCH FUNCTION - SLEEP COUNTER=========
-
 let startTime, endTime;
-let run = document.getElementById("stateContainer").getAttribute('data-state') === 'true';
+let run =
+  document.getElementById("stateContainer").getAttribute("data-state") ===
+  "true";
+
+let state = document
+  .getElementById("stateContainer")
+  .getAttribute("data-state");
+
 const stopwatchBtn = document.getElementById("stopwatchBtn");
 const labelBtn = document.getElementById("labelBtn");
-const resultDisplay = document.getElementById("resultDisplay");
+const durationDisplay = document.getElementById("durationDisplay");
 const timestampDisplay = document.getElementById("timestampDisplay");
+let intervalId; // Declare interval ID for duration updates
 
+if (run) {
+  labelBtn.textContent = "Tombol Bangun";
+  document.getElementById("durationDisplay").classList.add("blinking");
+
+  // Retrieve and calculate the ongoing duration from the backend-provided start time
+  const isoStartTime = document
+    .getElementById("stateContainer")
+    .getAttribute("data-start-time");
+  startTime = new Date(isoStartTime);
+
+  // Calculate and display the elapsed time
+  intervalId = setInterval(() => {
+    const now = new Date();
+    const elapsedTime = (now - startTime) / 1000; // Elapsed time in seconds
+    const hours = Math.floor(elapsedTime / 3600);
+    const minutes = Math.floor((elapsedTime % 3600) / 60);
+
+    const elapsedTimeStr =
+      hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+    durationDisplay.textContent = elapsedTimeStr;
+  }, 1000);
+} else {
+  labelBtn.textContent = "Tombol Tidur";
+  document.getElementById("durationDisplay").classList.remove("blinking");
+  durationDisplay.textContent = "-"; // Clear duration if not running
+}
+
+// Button click event
 stopwatchBtn.addEventListener("click", () => {
   if (!run) {
     // START timestamp
+    document.getElementById("durationDisplay").classList.add("blinking");
     startTime = new Date();
     const isoStartTime = startTime.toISOString();
     const startDateStr = `${startTime.getDate().toString().padStart(2, "0")}/${(
@@ -23,10 +58,11 @@ stopwatchBtn.addEventListener("click", () => {
       .getHours()
       .toString()
       .padStart(2, "0")}:${startTime.getMinutes().toString().padStart(2, "0")}`;
-    timestampDisplay.textContent = `${startDateStr}`;
+    timestampDisplay.textContent = `Mulai: ${startDateStr}`;
     stopwatchBtn.textContent = "😴";
-    stopwatchBtn.style.backgroundColor = `--lilac`;
     labelBtn.textContent = "Tombol Bangun";
+
+    // Send the start time to the backend
     fetch("/api/add-start", {
       method: "POST",
       headers: {
@@ -44,19 +80,32 @@ stopwatchBtn.addEventListener("click", () => {
         console.log("Response from addStart:", data);
       })
       .catch((error) => console.error("Error:", error));
+
+    // Start updating the duration every second
+    intervalId = setInterval(() => {
+      const now = new Date();
+      const elapsedTime = (now - startTime) / 1000; // Convert to seconds
+      const hours = Math.floor(elapsedTime / 3600);
+      const minutes = Math.floor((elapsedTime % 3600) / 60);
+
+      const elapsedTimeStr =
+        hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+      durationDisplay.textContent = elapsedTimeStr;
+    }, 1000);
   } else {
     // STOP timestamp
+    document.getElementById("durationDisplay").classList.remove("blinking");
     endTime = new Date();
+    clearInterval(intervalId); // Stop the real-time updates
+
     const elapsedTime = (endTime - startTime) / 1000; // Convert to seconds
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-    // Format the elapsed time based on hours
     const elapsedTimeStr =
       hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
     durationDisplay.textContent = elapsedTimeStr;
 
-    // Format stop timestamp
     const endDateStr = `${endTime.getDate().toString().padStart(2, "0")}/${(
       endTime.getMonth() + 1
     )
@@ -65,15 +114,14 @@ stopwatchBtn.addEventListener("click", () => {
       .getHours()
       .toString()
       .padStart(2, "0")}:${endTime.getMinutes().toString().padStart(2, "0")}`;
-    timestampDisplay.textContent += ` - ${endDateStr}`;
+    timestampDisplay.textContent += ` — ${endDateStr}`;
 
     stopwatchBtn.textContent = "🙂";
     labelBtn.textContent = "Tombol Tidur";
-    const isoEndTime = endTime.toISOString(); // Convert to ISO format
 
-    const requestPayload = {
-      endTime: isoEndTime,
-    };
+    // Send the end time to the backend
+    const isoEndTime = endTime.toISOString();
+    const requestPayload = { endTime: isoEndTime };
     fetch("/api/add-end", {
       method: "POST",
       headers: {
@@ -94,9 +142,3 @@ stopwatchBtn.addEventListener("click", () => {
   }
   run = !run;
 });
-
-document
-  .getElementById("tambahModal")
-  .addEventListener("shown.bs.modal", function () {
-    console.log("Modal berhasil muncul.");
-  });

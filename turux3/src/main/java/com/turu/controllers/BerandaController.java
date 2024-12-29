@@ -68,19 +68,21 @@ public class BerandaController {
 
     @GetMapping("/beranda")
     public String beranda(Model model) {
-        // Pass the current state to the frontend
-        model.addAttribute("buttonState", state);
-        model.addAttribute("buttonLabel", getLabelForState(state));
-        model.addAttribute("buttonClass", getClassForState(state));
-        model.addAttribute("buttonIcon", getIconForState(state));
-        if (!getLoggedInPengguna().isState()) {
-            model.addAttribute("state", false);
+        Pengguna pengguna = getLoggedInPengguna();
+        boolean isSleeping = pengguna.isState();
+        model.addAttribute("state", isSleeping);
+
+        if (isSleeping) {
+            model.addAttribute("buttonLabel", "Tombol Bangun");
+            DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
+            if (ongoingSession != null) {
+                model.addAttribute("startTime", ongoingSession.getWaktuMulai());
+            }
         } else {
-            model.addAttribute("state", true);
+            model.addAttribute("buttonLabel", "Tombol Tidur");
         }
 
         // STATISTIK
-        Pengguna pengguna = getLoggedInPengguna();
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(6);
 
@@ -95,7 +97,7 @@ public class BerandaController {
         for (int i = 0; i < 7; i++) {
             DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
             fullDayLabels[i] = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("id")); // Full day in
-                                                                                                      // Indonesian
+            // Indonesian
 
             // Dynamic short day labels based on requirements
             switch (dayOfWeek) {
@@ -133,67 +135,6 @@ public class BerandaController {
         return "beranda";
     }
 
-    @GetMapping("/tips")
-    public String tipsPage() {
-        return "tips"; // Mengarah ke file templates/tips.html
-    }
-
-    @PostMapping("/beranda/toggle-button")
-    public String toggleButton() throws InterruptedException {
-        // Transition logic for the button
-        switch (state) {
-            case "tidur":
-                state = "tidur-active";
-                Thread.sleep(3000); // Simulate delay
-                state = "bangun";
-                break;
-            case "bangun":
-                state = "tidur";
-                break;
-        }
-        return "redirect:/beranda"; // Redirect to refresh the page
-    }
-
-    // Helper methods for button attributes
-    private String getLabelForState(String state) {
-        switch (state) {
-            case "tidur":
-                return "Tombol Tidur";
-            case "tidur-active":
-                return "Tombol Bangun";
-            case "bangun":
-                return "Tombol Tidur";
-            default:
-                return "";
-        }
-    }
-
-    private String getClassForState(String state) {
-        switch (state) {
-            case "tidur":
-                return "lilac";
-            case "tidur-active":
-                return "purple";
-            case "bangun":
-                return "purple";
-            default:
-                return "";
-        }
-    }
-
-    private String getIconForState(String state) {
-        switch (state) {
-            case "tidur":
-                return "bi-moon-fill";
-            case "tidur-active":
-                return "bi-moon-stars-fill";
-            case "bangun":
-                return "bi-sunrise-fill";
-            default:
-                return "";
-        }
-    }
-
     @PostMapping("/api/add-start")
     @ResponseBody
     public ResponseEntity<String> addStart(@RequestBody LocalDateTime startTime) {
@@ -214,6 +155,39 @@ public class BerandaController {
         return ResponseEntity.ok("End time and duration calculated successfully!");
     }
 
+    @GetMapping("/api/get-session-data")
+    @ResponseBody
+    public ResponseEntity<SessionData> getSessionData() {
+        Pengguna pengguna = getLoggedInPengguna();
+
+        if (pengguna.isState()) {
+            DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
+            if (ongoingSession != null) {
+                SessionData sessionData = new SessionData(pengguna.isState(), ongoingSession.getWaktuMulai());
+                return ResponseEntity.ok(sessionData);
+            }
+        }
+        return ResponseEntity.ok(new SessionData(pengguna.isState(), null));
+    }
+
+    public static class SessionData {
+        private boolean state;
+        private LocalDateTime startTime;
+
+        public SessionData(boolean state, LocalDateTime startTime) {
+            this.state = state;
+            this.startTime = startTime;
+        }
+
+        public boolean isState() {
+            return state;
+        }
+
+        public LocalDateTime getStartTime() {
+            return startTime;
+        }
+    }
+
     // DTO for addEnd
     public static class AddEndRequest {
         private LocalDateTime endTime;
@@ -226,5 +200,4 @@ public class BerandaController {
             this.endTime = endTime;
         }
     }
-
 }
