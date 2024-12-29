@@ -13,15 +13,17 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Map;
 import com.turu.service.DataTidurService;
 import com.turu.model.DataTidur;
 import com.turu.model.Pengguna;
 import com.turu.repository.PenggunaRepository;
 import com.turu.service.PenggunaService;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,10 +75,8 @@ public class BerandaController {
         Pengguna pengguna = getLoggedInPengguna();
         boolean isSleeping = pengguna.isState();
         model.addAttribute("state", isSleeping);
-        
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        model.addAttribute("waktuMulaiFormatted", dataTidurService.cariTerbaruDataTidur(pengguna).getWaktuMulai().format(formatter3));
-        model.addAttribute("waktuSelesaiFormatted", dataTidurService.cariTerbaruDataTidur(pengguna).getWaktuSelesai().format(formatter3));
+        DateTimeFormatter formatter4 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         if (isSleeping) {
             model.addAttribute("buttonLabel", "Tombol Bangun");
             DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
@@ -110,7 +110,24 @@ public class BerandaController {
             // Get sleep duration in hours using the existing durasi field
             LocalTime durasi = latestSleep.getDurasi();
             double sleepHours = durasi.getHour() + (durasi.getMinute() / 60.0);
-
+            
+            // Pass data tidur ke html
+            String waktu = "........";
+            model.addAttribute("waktu", waktu);
+            model.addAttribute("durasi", "----");
+                if (latestSleep != null && latestSleep.getWaktuSelesai() == null){
+                    model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
+                    waktu = latestSleep.getWaktuMulai().format(formatter4) + " —  ...";
+                    model.addAttribute("waktu", waktu);
+                } else if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
+                    model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
+                    model.addAttribute("waktuSelesaiFormatted", latestSleep.getWaktuSelesai().format(formatter3));
+                    waktu = latestSleep.getWaktuMulai().format(formatter4) + " — " + latestSleep.getWaktuSelesai().format(formatter4); 
+                    model.addAttribute("waktu", waktu);
+                    String durasi2 = durasi.getHour() + " j " + durasi.getMinute() + " m";
+                    model.addAttribute("durasi", durasi2);
+                }
+            
             // Get start time hour for owl condition
             int startHour = latestSleep.getWaktuMulai().getHour();
 
@@ -150,7 +167,7 @@ public class BerandaController {
             model.addAttribute("sleepScore", "-");
         }
         // STATISTIK
-        LocalDate today = LocalDate.now();
+        LocalDate today = ZonedDateTime.now(zone).toLocalDate();
         LocalDate startDate = today.minusDays(6);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
@@ -214,12 +231,19 @@ public class BerandaController {
 
     @PostMapping("/api/add-end")
     @ResponseBody
-    public ResponseEntity<String> addEnd(@RequestBody AddEndRequest request) {
+    public ResponseEntity<Map<String, Object>> addEnd(@RequestBody AddEndRequest request) {
+        Map<String, Object> response = new HashMap<>();
         Pengguna pengguna = getLoggedInPengguna();
-        dataTidurService.addEnd(request.getEndTime(), pengguna);
+        boolean isDeleted = false;
+        DataTidur dt = dataTidurService.cariTerbaruDataTidur(pengguna);
+        
+        isDeleted = dataTidurService.addEnd(request.getEndTime(), pengguna);
+        
         pengguna.setState(false);
         penggunaRepository.save(pengguna);
-        return ResponseEntity.ok("End time and duration calculated successfully!");
+        response.put("message", "End time and duration calculated successfully!");
+        response.put("isDeleted", isDeleted);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/api/get-session-data")

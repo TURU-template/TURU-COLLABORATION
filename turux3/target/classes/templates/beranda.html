@@ -43,14 +43,14 @@
             Mulai:
           </div>
           <div class="result" id="durationDisplay"> </div>
-
+          
           <br><br><br><br><br><br>
           <div class="subtitle">
             Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
               id="editData">&#9998; </button>
           </div>
-          <div class="result" id="timestampDisplay">29/12/24 22:11 — 30/12/24 06:11</div>
-          <div class="result" id="durationDisplay">8 j 20m</div>
+          <div class="result" id="timestampDisplay" th:text="${waktu}"></div>
+          <div class="result" id="durationDisplay" th:text="${durasi}"></div>
 
 
           <br><br><br><br>

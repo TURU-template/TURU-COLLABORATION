@@ -1,6 +1,7 @@
 package com.turu.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
 
@@ -40,7 +41,7 @@ public class DataTidurService {
         dataTidurRepository.save(dt);
     }
 
-    public void addEnd(LocalDateTime time, Pengguna pengguna) {
+    public boolean addEnd(LocalDateTime time, Pengguna pengguna) {
         // Tambahkan 7 jam ke waktu selesai
         LocalDateTime adjustedTime = time.plusHours(7);
 
@@ -49,7 +50,14 @@ public class DataTidurService {
         dt.setTanggal(adjustedTime.toLocalDate());
         dt.hitungDurasi();
         dt.hitungSkor(Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears());
-        dataTidurRepository.save(dt);
+        if (dt.getDurasi().isBefore(LocalTime.of(0, 15, 0))) {
+            dataTidurRepository.deleteById(dt.getId());
+            return true;
+        } else {
+            dataTidurRepository.save(dt);
+            return false;
+        }
+        
     }
     public void tambah(DataTidur dt, Pengguna pengguna){
         dt.setIdPengguna(pengguna);
