@@ -78,6 +78,7 @@ public class DataTidurService {
     public void update(DataTidur dt, Pengguna pengguna){
         dt.hitungDurasi();
         dt.hitungSkor(Period.between(pengguna.getTanggalLahir(),  ZonedDateTime.now(zone).toLocalDate()).getYears());
+        dt.setTanggal(dt.getWaktuSelesai().toLocalDate());
         dataTidurRepository.save(dt);
     }
 
