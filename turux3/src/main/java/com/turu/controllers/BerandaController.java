@@ -85,7 +85,7 @@ public class BerandaController {
         LocalDate startDate = today.minusDays(6);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd, MMMM yyyy");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
         String[] fullDayLabels = new String[7];
         String[] dateLabels = new String[7];

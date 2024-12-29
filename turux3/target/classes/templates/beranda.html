@@ -39,7 +39,7 @@
             <br>
             <h4 id="labelBtn" th:text="${buttonLabel}">Tombol Tidur</h4>
           </div>
-          <div id="stateContainer" th:data-state="${state}">  </div>
+          <div id="stateContainer" th:data-state="${state}"> </div>
 
 
           <!-- Button Tips -->
@@ -196,6 +196,9 @@
     var dateLabels = /*[[${dateLabels}]]*/[];
     var todayIndex = 6;
 
+    // Ganti skor 0 atau nilai kosong dengan 99
+    sleepScores = sleepScores.map(score => (score === 0 || score === null ? 3 : score));
+
     let ctx = document.getElementById("sleepChart").getContext("2d");
 
     let sleepChart = new Chart(ctx, {
@@ -206,12 +209,32 @@
           {
             label: "Skor Tidur",
             data: sleepScores,
-            backgroundColor: "#8c4fc2",
+            backgroundColor: sleepScores.map((score, index) => {
+              if (index === todayIndex) {
+                return "#514FC2"; // Warna khusus untuk todayIndex
+              }
+              return "#8c4fc2";
+            }),
             borderWidth: 1,
           },
         ],
       },
       options: {
+        layout: {
+          padding: {
+            top: 24, // Tambahkan jarak di bagian atas
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+          },
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false, // Memastikan hover berlaku di seluruh area, bukan hanya saat pointer berada di atas bar
+        },
         plugins: {
           legend: {
             position: 'bottom',
@@ -221,11 +244,19 @@
           },
           tooltip: {
             callbacks: {
-              label: function (context) {
-                const index = context.dataIndex;
+              title: function (context) {
+                const index = context[0].dataIndex; // Access the first element in context for the hovered item
+                const value = context[0].raw; // Get the data value
                 const fullDay = fullDayLabels[index];
                 const date = dateLabels[index];
-                return `${fullDay}, ${date}: ${context.raw}`;
+                return `${fullDay}, ${date}`; // Regular title for other data
+              },
+              label: function (context) {
+                const value = context.raw; // Get the data value
+                if (value === 3) {
+                  return "Data Tidak Ada"; // Hide label for missing data
+                }
+                return `Skor: ${value}`; // Regular label for valid data
               }
             }
           },
@@ -233,7 +264,7 @@
             anchor: 'end',
             align: 'end',
             formatter: function (value) {
-              return value; // Display sleep score
+              return value === 3 ? "-" : value; // Display sleep score
             },
             color: 'white', // White text color for contrast
             font: {
