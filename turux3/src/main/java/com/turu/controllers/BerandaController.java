@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.*;
@@ -26,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class BerandaController {
@@ -35,7 +37,7 @@ public class BerandaController {
     private PenggunaService penggunaService;
     private DataTidurService dataTidurService;
     private PenggunaRepository penggunaRepository;
-
+    ZoneId zone = ZoneId.of("Asia/Jakarta");
     @Autowired
     public BerandaController(DataTidurService dataTidurService, PenggunaService penggunaService,
             PenggunaRepository penggunaRepository) {
@@ -71,7 +73,10 @@ public class BerandaController {
         Pengguna pengguna = getLoggedInPengguna();
         boolean isSleeping = pengguna.isState();
         model.addAttribute("state", isSleeping);
-
+        
+        DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        model.addAttribute("waktuMulaiFormatted", dataTidurService.cariTerbaruDataTidur(pengguna).getWaktuMulai().format(formatter3));
+        model.addAttribute("waktuSelesaiFormatted", dataTidurService.cariTerbaruDataTidur(pengguna).getWaktuSelesai().format(formatter3));
         if (isSleeping) {
             model.addAttribute("buttonLabel", "Tombol Bangun");
             DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
@@ -85,7 +90,7 @@ public class BerandaController {
         DataTidur latestSleep = dataTidurService.cariTerbaruDataTidur(pengguna);
         if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
             // Calculate age
-            int age = Period.between(pengguna.getTanggalLahir(), LocalDate.now()).getYears();
+            int age = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
 
             // Determine min and max hours based on age
             double minHours;
@@ -262,4 +267,35 @@ public class BerandaController {
             this.endTime = endTime;
         }
     }
+    @PostMapping("/tambahTidur")
+    public String tambahTidur(@ModelAttribute DataTidur dataTidur, RedirectAttributes redirectAttributes, Model model){
+        Pengguna pengguna = getLoggedInPengguna();
+        String message;
+        if (dataTidurService.cekDuplikatDataTidur(dataTidur, pengguna)){
+            message = "Anda telah memiliki data tidur pada tanggal " + dataTidur.getWaktuSelesai().toLocalDate();
+            redirectAttributes.addFlashAttribute("message", message);
+            redirectAttributes.addFlashAttribute("openModal", true);
+            redirectAttributes.addFlashAttribute("dataTidur", dataTidur);
+            return "redirect:/beranda"; // Redirect to refresh the page
+        } else {
+            dataTidurService.tambah(dataTidur, pengguna);
+            message = "Data tidur berhasil ditambahkan";
+            redirectAttributes.addFlashAttribute("message", message);
+            redirectAttributes.addFlashAttribute("openModal", false);
+            return "redirect:/beranda"; // Redirect to refresh the page
+        }
+
+    }
+    @PostMapping("/editTidur")
+    public String editTidur(@RequestParam("waktuMulai") String waktuMulai, @RequestParam("waktuSelesai") String waktuSelesai){
+        DataTidur dataTidur = dataTidurService.cariTerbaruDataTidur(getLoggedInPengguna());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime mulai = LocalDateTime.parse(waktuMulai, formatter);
+        LocalDateTime selesai = LocalDateTime.parse(waktuSelesai, formatter);
+        dataTidur.setWaktuMulai(mulai);
+        dataTidur.setWaktuSelesai(selesai);
+        dataTidurService.update(dataTidur, getLoggedInPengguna());
+        return  "redirect:/beranda";
+    }
+
 }

@@ -2,18 +2,21 @@ package com.turu.service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZonedDateTime;
 
 import com.turu.model.DataTidur;
 import com.turu.model.Pengguna;
 import com.turu.repository.DataTidurRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class DataTidurService {
     DataTidur dt = new DataTidur();
+    ZoneId zone = ZoneId.of("Asia/Jakarta");
     private DataTidurRepository dataTidurRepository;
 
     public DataTidurService(DataTidurRepository dataTidurRepository) {
@@ -45,7 +48,28 @@ public class DataTidurService {
         dt.setWaktuSelesai(adjustedTime); // Gunakan waktu yang sudah diubah
         dt.setTanggal(adjustedTime.toLocalDate());
         dt.hitungDurasi();
-        dt.hitungSkor(Period.between(pengguna.getTanggalLahir(), LocalDate.now()).getYears());
+        dt.hitungSkor(Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears());
+        dataTidurRepository.save(dt);
+    }
+    public void tambah(DataTidur dt, Pengguna pengguna){
+        dt.setIdPengguna(pengguna);
+        dt.setTanggal(dt.getWaktuSelesai().toLocalDate());
+        dt.hitungDurasi();
+        dt.hitungSkor(Period.between(pengguna.getTanggalLahir(),  ZonedDateTime.now(zone).toLocalDate()).getYears());
+        dataTidurRepository.save(dt);
+    }
+    public boolean cekDuplikatDataTidur(DataTidur dt, Pengguna pengguna){
+        List<DataTidur> A = dataTidurRepository.findByPengguna(pengguna);
+        for (DataTidur data : A){
+            if (data.getTanggal().equals(dt.getWaktuSelesai().toLocalDate())){
+                return true ;
+            }
+        }
+        return false ;
+    }
+    public void update(DataTidur dt, Pengguna pengguna){
+        dt.hitungDurasi();
+        dt.hitungSkor(Period.between(pengguna.getTanggalLahir(),  ZonedDateTime.now(zone).toLocalDate()).getYears());
         dataTidurRepository.save(dt);
     }
 
