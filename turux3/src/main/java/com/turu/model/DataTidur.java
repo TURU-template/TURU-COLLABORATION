@@ -53,11 +53,11 @@ public class DataTidur {
         double minHours;
         double maxHours;
         double sleepDuration = 0;
-        if (this.durasi.getSecond() >= 31) {
-            sleepDuration = this.durasi.getHour() + ((this.durasi.getMinute()+1)/60);
+        if (durasi.getSecond() >= 31) {
+            sleepDuration = durasi.getHour() + (((double)(durasi.getMinute()+1))/60);
         } else {
-            sleepDuration = this.durasi.getHour() + (this.durasi.getMinute()/60);
-        }
+            sleepDuration = durasi.getHour() + (((double)durasi.getMinute())/60);
+        } 
          
         // Rekomendasi durasi tidur berdasarkan umur
         if (age <= 17) { // remaja
