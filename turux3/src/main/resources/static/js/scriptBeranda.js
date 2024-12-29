@@ -1,11 +1,7 @@
 let startTime, endTime;
-let run =
-  document.getElementById("stateContainer").getAttribute("data-state") ===
-  "true";
+let run = document.getElementById("stateContainer").getAttribute("data-state") === "true";
 
-let state = document
-  .getElementById("stateContainer")
-  .getAttribute("data-state");
+let state = document.getElementById("stateContainer").getAttribute("data-state");
 
 const stopwatchBtn = document.getElementById("stopwatchBtn");
 const labelBtn = document.getElementById("labelBtn");
@@ -18,9 +14,7 @@ if (run) {
   document.getElementById("durationDisplay").classList.add("blinking");
 
   // Retrieve and calculate the ongoing duration from the backend-provided start time
-  const isoStartTime = document
-    .getElementById("stateContainer")
-    .getAttribute("data-start-time");
+  const isoStartTime = document.getElementById("stateContainer").getAttribute("data-start-time");
   startTime = new Date(isoStartTime);
 
   // Calculate and display the elapsed time
@@ -30,8 +24,7 @@ if (run) {
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-    const elapsedTimeStr =
-      hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+    const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
     durationDisplay.textContent = elapsedTimeStr;
   }, 1000);
 } else {
@@ -47,9 +40,7 @@ stopwatchBtn.addEventListener("click", () => {
     document.getElementById("durationDisplay").classList.add("blinking");
     startTime = new Date();
     const isoStartTime = startTime.toISOString();
-    const startDateStr = `${startTime.getDate().toString().padStart(2, "0")}/${(
-      startTime.getMonth() + 1
-    )
+    const startDateStr = `${startTime.getDate().toString().padStart(2, "0")}/${(startTime.getMonth() + 1)
       .toString()
       .padStart(2, "0")}/${startTime
       .getFullYear()
@@ -88,8 +79,7 @@ stopwatchBtn.addEventListener("click", () => {
       const hours = Math.floor(elapsedTime / 3600);
       const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-      const elapsedTimeStr =
-        hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+      const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
       durationDisplay.textContent = elapsedTimeStr;
     }, 1000);
   } else {
@@ -102,13 +92,10 @@ stopwatchBtn.addEventListener("click", () => {
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-    const elapsedTimeStr =
-      hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+    const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
     durationDisplay.textContent = elapsedTimeStr;
 
-    const endDateStr = `${endTime.getDate().toString().padStart(2, "0")}/${(
-      endTime.getMonth() + 1
-    )
+    const endDateStr = `${endTime.getDate().toString().padStart(2, "0")}/${(endTime.getMonth() + 1)
       .toString()
       .padStart(2, "0")}/${endTime.getFullYear().toString().slice(-2)} ${endTime
       .getHours()
@@ -129,14 +116,17 @@ stopwatchBtn.addEventListener("click", () => {
       },
       body: JSON.stringify(requestPayload),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        }
-        throw new Error("Failed to call addEnd.");
-      })
+      .then((response) => response.json()) // Expecting a JSON response
       .then((data) => {
         console.log("Response from addEnd:", data);
+
+        // Check if the data was deleted and trigger an alert if so
+        if (data.isDeleted) {
+          alert("Data ditolak karena durasi tidur dibawah 15 menit");
+        }
+
+        // Refresh page
+        window.location.reload();
       })
       .catch((error) => console.error("Error:", error));
   }

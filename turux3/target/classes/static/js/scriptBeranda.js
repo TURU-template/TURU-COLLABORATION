@@ -122,7 +122,7 @@ stopwatchBtn.addEventListener("click", () => {
 
         // Check if the data was deleted and trigger an alert if so
         if (data.isDeleted) {
-          alert("Data ditolak karena durasi dibawah 15 menit");
+          alert("Data ditolak karena durasi tidur dibawah 15 menit");
         }
 
         // Refresh page

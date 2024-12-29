@@ -49,8 +49,8 @@
             Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
               id="editData">&#9998; </button>
           </div>
-          <div class="result" id="timestampDisplay">29/12/24 22:11 — 30/12/24 06:11</div>
-          <div class="result" id="durationDisplay">8 j 20m</div>
+          <div class="result" id="timestampDisplay" th:text="${waktu}"></div>
+          <div class="result" id="durationDisplay" th:text="${durasi}"></div>
 
 
           <br><br><br><br>
@@ -94,15 +94,16 @@
                   aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form id="dataTidurForm" method="POST" action="tambahTidur">
+                <form id="dataTidurForm" method="POST" action="/tambahTidur" th:object="${dataTidur}">
                   <div class="mb-3">
                     <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
-                    <input type="datetime-local" class="form-control" id="waktuMulai" required>
+                    <input type="datetime-local" class="form-control" name="waktuMulai" id="waktuMulai" required>
                   </div>
                   <div class="mb-3">
                     <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
-                    <input type="datetime-local" class="form-control" id="waktuSelesai" required>
+                    <input type="datetime-local" class="form-control" name="waktuSelesai" id="waktuSelesai" required>
                   </div>
+                  <div class="error" th:if="${openModal}" th:text="${message}"></div>
                   <br><br>
                   <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
                   <button type="submit" class="btn btn-confirm">Simpan</button>
@@ -111,7 +112,16 @@
             </div>
           </div>
         </div>
-
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+              // Ensure modal opens if `openModal` is true
+              let openModal = [[${openModal}]];
+              if (openModal) {
+                  let tambahModal = new bootstrap.Modal(document.getElementById("tambahModal"));
+                  tambahModal.show();
+              }
+          });
+        </script>
         <!-- Modal Edit Data Tidur -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
@@ -122,14 +132,14 @@
                   aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form id="dataTidurForm" method="POST" action="editTidur">
+                <form id="dataTidurForm" method="POST" action="/editTidur">
                   <div class="mb-3">
                     <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
-                    <input type="datetime-local" class="form-control" id="waktuMulai" value="xxx" required>
+                    <input type="datetime-local" class="form-control" id="waktuMulai" name="waktuMulai" th:value="${waktuMulaiFormatted}"  required>
                   </div>
                   <div class="mb-3">
                     <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
-                    <input type="datetime-local" class="form-control" id="waktuSelesai" value="xxx" required>
+                    <input type="datetime-local" class="form-control" id="waktuSelesai" name="waktuSelesai" th:value="${waktuSelesaiFormatted}" required>
                   </div>
                   <br><br>
                   <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
@@ -139,6 +149,7 @@
             </div>
           </div>
         </div>
+
 
         <!-- Sticky Bottom Navbar -->
         <nav class="navbar navbar-expand navbar-dark">
