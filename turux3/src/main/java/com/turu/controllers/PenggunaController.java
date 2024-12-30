@@ -30,7 +30,7 @@ public class PenggunaController {
     }
 
     @GetMapping("/akun")
-    public String profile(Model model) {
+    public String showAkunPage(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = (principal instanceof UserDetails)
                 ? ((UserDetails) principal).getUsername()
@@ -42,7 +42,7 @@ public class PenggunaController {
         }
 
         model.addAttribute("pengguna", pengguna.get());
-        return "profile";
+        return "akun";
     }
 
     @GetMapping("/register")

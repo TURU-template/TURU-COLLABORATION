@@ -7,30 +7,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class NavigationController {
-	@GetMapping("/beranda2")
-	public String displayPageTest(Model model) {
-		return "beranda2.html"; // ini harus keluar, terus buka di folder Static
-	}
-
 	@GetMapping("/")
 	public String displayPageDefault(Model model) {
-		return "beranda.html"; // ini harus keluar, terus buka di folder Static
+		return "beranda"; // ini harus keluar, terus buka di folder Static
 	}
 
 	@GetMapping("/index")
 	public String displayPageIndex(Model model) {
-		return "beranda.html"; // ini harus keluar, terus buka di folder Static
+		return "beranda"; // ini harus keluar, terus buka di folder Static
 	}
 
 	@GetMapping("/radio")
 	public String displayPageRadio(Model model) {
-		return "radio.html"; // ini harus keluar, terus buka di folder Static
+		return "radio"; // ini harus keluar, terus buka di folder Static
 	}
 
-	@GetMapping("/anggota")
-	@ResponseBody
-	public String displayAnggota() {
-		return "Kelompok IMPAL x PBO";
+	@GetMapping("/test") 
+	public String displayTest(Model model) {
+		return "test";
+	}
+
+	@GetMapping("/tips")
+	public String displayPageTips(Model model) {
+		return "tips"; // ini harus keluar, terus buka di folder Static
 	}
 
 	@GetMapping("/tips_lama-waktu-tidur")
