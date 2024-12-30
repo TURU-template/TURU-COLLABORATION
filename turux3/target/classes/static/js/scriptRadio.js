@@ -1,24 +1,27 @@
 // ========== Radio - Audio Player ==========
-// Single global audio element
+// Single global audio element for Color and Lo-Fi
 const audioElement = new Audio();
-let currentTrackKey = null; // Keeps track of the currently playing sound
+let currentTrackKey = null; // Keeps track of the currently playing sound for Color and Lo-Fi
+
+// Separate audio elements for Ambient Sounds
+const ambientAudioElements = {};
 
 // Define all audio sources
 const soundSources = {
-    //color
+    // Color
     white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
     brown: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3",
     blue: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3",
     pink: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3",
-   
-    //ambiens
+
+    // Ambient
     jangkrik: "../asset/songs/Jangkrik.mp3",
     ombak: "../asset/songs/Ombak.mp3",
     api: "../asset/songs/Api.mp3",
     hujan: "../asset/songs/Hujan.mp3",
     burung: "../asset/songs/burung.mp3",
-    
-    //Lo-Fi
+
+    // Lo-Fi
     twilight: "../asset/songs/twilight.mp3",
     monoman: "../asset/songs/Monoman.mp3",
     yasumu: "../asset/songs/Yasumu.mp3"
@@ -27,31 +30,78 @@ const soundSources = {
 // Ensure audio loops
 audioElement.loop = true;
 
-// Function to toggle audio and update button styles
+// Function to toggle audio playback
 function toggleAudio(soundKey) {
     const button = document.getElementById(`${soundKey}-btn`);
 
-    if (currentTrackKey === soundKey) {
-        // Pause if the same button is clicked
+    if (isAmbientSound(soundKey)) {
+        // Ambient Sound Logic
+        if (!ambientAudioElements[soundKey]) {
+            ambientAudioElements[soundKey] = new Audio(soundSources[soundKey]);
+            ambientAudioElements[soundKey].loop = true;
+        }
+
+        const audio = ambientAudioElements[soundKey];
+        if (audio.paused) {
+            stopNonAmbientSounds(); // Stop Color/Lo-Fi music before playing Ambient
+            audio.play();
+            setButtonState(button, true);
+        } else {
+            audio.pause();
+            setButtonState(button, false);
+        }
+    } else {
+        // Color and Lo-Fi Logic
+        if (currentTrackKey === soundKey) {
+            // Pause if the same button is clicked
+            audioElement.pause();
+            setButtonState(button, false);
+            currentTrackKey = null;
+            savePlaybackState(null);
+        } else {
+            // Play the selected audio
+            if (soundSources[soundKey]) {
+                stopAllAmbientSounds(); // Stop all Ambient sounds before playing Color/Lo-Fi
+                audioElement.src = soundSources[soundKey];
+                audioElement.play();
+                savePlaybackState(soundKey);
+
+                // Update button states
+                if (currentTrackKey) {
+                    const previousButton = document.getElementById(`${currentTrackKey}-btn`);
+                    setButtonState(previousButton, false);
+                }
+                setButtonState(button, true);
+                currentTrackKey = soundKey;
+            }
+        }
+    }
+}
+
+// Helper to check if a sound is Ambient
+function isAmbientSound(soundKey) {
+    return ["jangkrik", "ombak", "api", "hujan", "burung"].includes(soundKey);
+}
+
+// Stop all Ambient Sounds
+function stopAllAmbientSounds() {
+    for (const key in ambientAudioElements) {
+        const audio = ambientAudioElements[key];
+        if (!audio.paused) {
+            audio.pause();
+            const button = document.getElementById(`${key}-btn`);
+            setButtonState(button, false);
+        }
+    }
+}
+
+// Stop all non-Ambient (Color/Lo-Fi) sounds
+function stopNonAmbientSounds() {
+    if (currentTrackKey) {
         audioElement.pause();
+        const button = document.getElementById(`${currentTrackKey}-btn`);
         setButtonState(button, false);
         currentTrackKey = null;
-        savePlaybackState(null);
-    } else {
-        // Play the selected audio
-        if (soundSources[soundKey]) {
-            audioElement.src = soundSources[soundKey];
-            audioElement.play();
-            savePlaybackState(soundKey);
-
-            // Update button states
-            if (currentTrackKey) {
-                const previousButton = document.getElementById(`${currentTrackKey}-btn`);
-                setButtonState(previousButton, false);
-            }
-            setButtonState(button, true);
-            currentTrackKey = soundKey;
-        }
     }
 }
 
@@ -76,7 +126,6 @@ function savePlaybackState(soundKey) {
     localStorage.setItem("radioPlaybackState", JSON.stringify(playbackState));
 }
 
-
 // Update button states with dynamic color styling
 function setButtonState(button, isActive) {
     if (button) {
@@ -93,7 +142,6 @@ function setButtonState(button, isActive) {
         }
     }
 }
-
 
 // Add event listener for page unload (for saving state)
 window.onbeforeunload = () => savePlaybackState(currentTrackKey);
