@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const waktuSelesai = modal.querySelector('[name="waktuSelesai"]');
 
       if (waktuMulai && waktuSelesai) {
-        
+
         setupDateTimeValidation(waktuMulai, waktuSelesai);
       }
     }
@@ -198,6 +198,14 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
 
       if (endDate < startDate || endDate > maxDate) {
         alert("Waktu selesai tidak valid. Harus dalam rentang 24 jam setelah waktu mulai.");
+        waktuSelesai.value = '';
+        return;
+      }
+
+      // Validasi durasi minimal 15 menit
+      const duration = endDate - startDate;
+      if (duration < 15 * 60 * 1000) { // 15 menit dalam milidetik
+        alert("Durasi tidak boleh kurang dari 15 menit.");
         waktuSelesai.value = '';
       }
     }
@@ -235,6 +243,13 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
       });
       alert(`Waktu selesai tidak boleh lebih dari ${formattedMax}.`);
       this.value = '';
+    } else {
+      // Validasi durasi minimal 15 menit
+      const duration = endDate - startDate;
+      if (duration < 15 * 60 * 1000) { // 15 menit dalam milidetik
+        alert("Durasi tidak boleh kurang dari 15 menit.");
+        this.value = '';
+      }
     }
   });
 
@@ -247,3 +262,4 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
     waktuSelesai.dispatchEvent(new Event('change'));
   }
 }
+s
