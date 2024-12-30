@@ -152,3 +152,80 @@ stopwatchBtn.addEventListener("click", () => {
   }
   run = !run;
 });
+// Function to format datetime to yyyy-MM-ddTHH:mm considering local timezone
+function formatDateTime(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Gabungkan logika untuk modal tambah dan edit
+  ['tambahModal', 'editModal'].forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      const waktuMulai = modal.querySelector('[name="waktuMulai"]');
+      const waktuSelesai = modal.querySelector('[name="waktuSelesai"]');
+
+      if (waktuMulai && waktuSelesai) {
+        // Hanya set validasi tanpa menyetel ulang nilai input
+        setupDateTimeValidation(waktuMulai, waktuSelesai);
+      }
+    }
+  });
+});
+
+function setupDateTimeValidation(waktuMulai, waktuSelesai) {
+  waktuMulai.addEventListener('change', function() {
+    const startDate = new Date(this.value);
+
+    // Validasi waktu selesai yang sudah ada
+    if (waktuSelesai.value) {
+      const endDate = new Date(waktuSelesai.value);
+      const maxDate = new Date(startDate);
+      maxDate.setHours(maxDate.getHours() + 24);
+
+      if (endDate < startDate || endDate > maxDate) {
+        alert("Waktu selesai tidak valid. Harus dalam rentang 24 jam setelah waktu mulai.");
+        waktuSelesai.value = '';
+      }
+    }
+  });
+
+  waktuSelesai.addEventListener('change', function() {
+    if (!waktuMulai.value) {
+      alert('Silakan pilih waktu mulai tidur terlebih dahulu');
+      this.value = '';
+      return;
+    }
+
+    const startDate = new Date(waktuMulai.value);
+    const endDate = new Date(this.value);
+    const maxDate = new Date(startDate);
+    maxDate.setHours(maxDate.getHours() + 24);
+
+    if (endDate < startDate) {
+      alert('Waktu bangun tidak boleh lebih awal dari waktu mulai tidur');
+      this.value = '';
+    } else if (endDate > maxDate) {
+      const formattedMax = maxDate.toLocaleString('id-ID', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      alert(`Waktu bangun tidak boleh lebih dari ${formattedMax}`);
+      this.value = '';
+    }
+  });
+
+  // Trigger validasi awal jika input sudah memiliki nilai
+  if (waktuMulai.value) {
+    waktuMulai.dispatchEvent(new Event('change'));
+  }
+}
