@@ -30,40 +30,29 @@
         </header>
         <!-- CONTENT PAGE -->
         <div class="content beranda center">
-          <!-- <div class="center" th:if="${state}"> -->
-          <div class="center">
-            <button id="stopwatchBtn" class="turu-button" th:text="${state} ? '😴' : '🙂'">🙂</button>
-            <br>
-            <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
-          </div>
+          <button id="stopwatchBtn" class="turu-button" th:text="${state} ? '😴' : '🙂'">🙂</button>
+          <br>
+          <h4 id="labelBtn" th:text="${buttonLabel}"></h4>
           <div id="stateContainer" th:data-state="${state}" th:data-start-time="${startTime}"></div>
-
-          <!-- Timestamp and Duration Display -->
           <div class="result" id="timestampDisplay"
-            th:text="${state} ? 'Mulai: ' + ${startTime} : 'Klik tombol untuk memulai'">
-            Mulai:
-          </div>
+            th:text="${state} ? 'Mulai: ' + ${startTime} : 'Klik tombol untuk memulai'">Mulai:</div>
           <div class="result" id="durationDisplay"> </div>
 
-          <br><br><br><br><br><br>
-          <div class="subtitle">
-            Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
-              id="editData">&#9998; </button>
-          </div>
-          <div class="result" id="timestampDisplay" th:text="${waktu}"></div>
-          <div class="result" id="durationDisplay" th:text="${durasi}"></div>
+          <br><br><br>
 
-
-          <br><br><br><br>
-          <!-- Character Display -->
-          <div class="subtitle">Skor Tidur</div>
-          <div class="row">
-            <div class="col result" id="mascotDisplay" th:text="${mascot}">😴</div>
-            <div class="col result" id="scoreDisplay" th:text="${sleepScore}">-</div>
-          </div>
-          <h3 class="result" id="mascotNameDisplay" th:text="${mascotName}">Belum ada data</h3>
-          <div class="result" id="mascotDescriptionDisplay" th:text="${mascotDescription}">
-            Mulai tidur untuk melihat maskot Anda
+          <div class="skorDataTidur">
+            <div class="subtitle">
+              Hasil Data Tidur <button class="btn-pencil" data-bs-toggle="modal" data-bs-target="#editModal"
+                id="editData">&#9998; </button>
+            </div>
+            <div class="result" id="timestampDisplay" th:text="${waktu}"></div>
+            <p id="mascotDisplay" th:text="${mascot}">😴</p>
+            <span class="result" id="resultDisplay" th:text="${durasi}"></span>
+            <span th:text="${state} ? '' : '• Skor: '" id="resultDisplay"></span>
+            <span class="result" id="resultDisplay" th:text="${sleepScore}"></span>
+            <br><br>
+            <h3 class="result" id="mascotNameDisplay" th:text="${mascotName}"></h3>
+            <div class="result" id="mascotDescriptionDisplay" th:text="${mascotDescription}"></div>
           </div>
 
           <br><br><br><br>
@@ -117,12 +106,12 @@
         </div>
         <script>
           document.addEventListener("DOMContentLoaded", () => {
-              // Ensure modal opens if `openModal` is true
-              let openModal = [[${openModal}]];
-              if (openModal) {
-                  let tambahModal = new bootstrap.Modal(document.getElementById("tambahModal"));
-                  tambahModal.show();
-              }
+            // Ensure modal opens if `openModal` is true
+            let openModal = [[${ openModal }]];
+            if (openModal) {
+              let tambahModal = new bootstrap.Modal(document.getElementById("tambahModal"));
+              tambahModal.show();
+            }
           });
         </script>
         <!-- Modal Edit Data Tidur -->
@@ -138,11 +127,13 @@
                 <form id="dataTidurForm" method="POST" action="/editTidur">
                   <div class="mb-3">
                     <label for="waktuMulai" class="form-label">Waktu Mulai Tidur</label>
-                    <input type="datetime-local" class="form-control" id="waktuMulai" name="waktuMulai" th:value="${waktuMulaiFormatted}"  required>
+                    <input type="datetime-local" class="form-control" id="waktuMulai" name="waktuMulai"
+                      th:value="${waktuMulaiFormatted}" required>
                   </div>
                   <div class="mb-3">
                     <label for="waktuSelesai" class="form-label">Waktu Bangun</label>
-                    <input type="datetime-local" class="form-control" id="waktuSelesai" name="waktuSelesai" th:value="${waktuSelesaiFormatted}" required>
+                    <input type="datetime-local" class="form-control" id="waktuSelesai" name="waktuSelesai"
+                      th:value="${waktuSelesaiFormatted}" required>
                   </div>
                   <br><br>
                   <button class="btn btn-cancel me-3" data-bs-dismiss="modal">Kembali</button>
@@ -155,29 +146,29 @@
       </div>
 
 
-        <!-- Sticky Bottom Navbar -->
-        <nav class="navbar navbar-expand navbar-dark">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" th:href="@{/beranda}">
-                <span class="bi bi-grid-fill nav-icon"></span>
-                Beranda
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/radio}">
-                <i class="bi bi-music-note nav-icon"></i>
-                Radio
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/akun}">
-                <i class="bi bi-person-fill nav-icon"></i>
-                Akun
-              </a>
-            </li>
-          </ul>
-        </nav>
+      <!-- Sticky Bottom Navbar -->
+      <nav class="navbar navbar-expand navbar-dark">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/beranda}">
+              <span class="bi bi-grid-fill nav-icon"></span>
+              Beranda
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/radio}">
+              <i class="bi bi-music-note nav-icon"></i>
+              Radio
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/akun}">
+              <i class="bi bi-person-fill nav-icon"></i>
+              Akun
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
     <div class="column creators middle">
       <br><br><br>

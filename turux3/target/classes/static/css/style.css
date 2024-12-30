@@ -13,7 +13,7 @@
   --button-color: #007bff;
 
   --text-color: #ffffff;
-  --text-color2: #b6b6b6;
+  --text-color2: #c8c8c8;
   --text-color-black: #000000;
 }
 
@@ -97,7 +97,7 @@ body.login {
 .content.beranda {
   background-image: url("../asset/BG_Beranda.svg") !important;
   background-attachment: local !important;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   padding-bottom: 100pt;
 }
@@ -357,30 +357,38 @@ a.nav-link {
   color: var(--pink);
 }
 
-#timestampDisplay,
-#mascotDescriptionDisplay {
-  text-align: center;
-  font-size: 1rem;
-  max-width: 75%;
-  color: var(--text-color2);
-}
-
-#mascotDisplay {
-  font-size: 78pt;
-  font-weight: 500;
-}
-
-#scoreDisplay {
-  font-size: 40pt;
-  padding-top: 20%;
-  font-weight: 500;
-}
-
-#durationDisplay {
-  color: var(--text-color);
+#durationDisplay{
   font-size: 32pt;
   font-weight: 500;
   margin: 16px 0px;
+}
+
+#mascotDisplay {
+  font-size: 100pt;
+  font-weight: 500;
+  margin-bottom: -12px;
+}
+
+#resultDisplay {
+  color: var(--text-color2);
+  font-style: italic;
+  font-size: 12pt;
+  margin-bottom: 48pt;
+}
+
+#mascotDescriptionDisplay, #timestampDisplay {
+  color: var(--text-color2);
+  font-size: 1rem;
+  max-width: 80%;
+}
+
+.skorDataTidur{
+  place-items: center;
+}
+
+.skorDataTidur #timestampDisplay{
+  color: var(--text-color);
+  max-width: 90%;
 }
 
 #sleepChart {

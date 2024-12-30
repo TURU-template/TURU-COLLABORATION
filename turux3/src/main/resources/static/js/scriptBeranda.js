@@ -1,7 +1,11 @@
 let startTime, endTime;
-let run = document.getElementById("stateContainer").getAttribute("data-state") === "true";
+let run =
+  document.getElementById("stateContainer").getAttribute("data-state") ===
+  "true";
 
-let state = document.getElementById("stateContainer").getAttribute("data-state");
+let state = document
+  .getElementById("stateContainer")
+  .getAttribute("data-state");
 
 const stopwatchBtn = document.getElementById("stopwatchBtn");
 const labelBtn = document.getElementById("labelBtn");
@@ -12,9 +16,12 @@ let intervalId; // Declare interval ID for duration updates
 if (run) {
   labelBtn.textContent = "Tombol Bangun";
   document.getElementById("durationDisplay").classList.add("blinking");
+  document.getElementById("mascotNameDisplay").classList.add("blinking");
 
   // Retrieve and calculate the ongoing duration from the backend-provided start time
-  const isoStartTime = document.getElementById("stateContainer").getAttribute("data-start-time");
+  const isoStartTime = document
+    .getElementById("stateContainer")
+    .getAttribute("data-start-time");
   startTime = new Date(isoStartTime);
 
   // Calculate and display the elapsed time
@@ -24,13 +31,16 @@ if (run) {
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-    const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+    const elapsedTimeStr =
+      hours > 0 ? `${hours} jam ${minutes} menit` : `${minutes} menit`;
     durationDisplay.textContent = elapsedTimeStr;
   }, 1000);
 } else {
   labelBtn.textContent = "Tombol Tidur";
   document.getElementById("durationDisplay").classList.remove("blinking");
-  durationDisplay.textContent = "-"; // Clear duration if not running
+  document.getElementById("mascotNameDisplay").classList.remove("blinking");
+
+  durationDisplay.textContent = ""; // Clear duration if not running
 }
 
 // Button click event
@@ -38,9 +48,13 @@ stopwatchBtn.addEventListener("click", () => {
   if (!run) {
     // START timestamp
     document.getElementById("durationDisplay").classList.add("blinking");
+    document.getElementById("mascotNameDisplay").classList.add("blinking");
+
     startTime = new Date();
     const isoStartTime = startTime.toISOString();
-    const startDateStr = `${startTime.getDate().toString().padStart(2, "0")}/${(startTime.getMonth() + 1)
+    const startDateStr = `${startTime.getDate().toString().padStart(2, "0")}/${(
+      startTime.getMonth() + 1
+    )
       .toString()
       .padStart(2, "0")}/${startTime
       .getFullYear()
@@ -79,12 +93,15 @@ stopwatchBtn.addEventListener("click", () => {
       const hours = Math.floor(elapsedTime / 3600);
       const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-      const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+      const elapsedTimeStr =
+        hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
       durationDisplay.textContent = elapsedTimeStr;
     }, 1000);
   } else {
     // STOP timestamp
     document.getElementById("durationDisplay").classList.remove("blinking");
+    document.getElementById("mascotNameDisplay").classList.remove("blinking");
+
     endTime = new Date();
     clearInterval(intervalId); // Stop the real-time updates
 
@@ -92,10 +109,13 @@ stopwatchBtn.addEventListener("click", () => {
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
 
-    const elapsedTimeStr = hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
+    const elapsedTimeStr =
+      hours > 0 ? `${hours} j ${minutes} m` : `${minutes} m`;
     durationDisplay.textContent = elapsedTimeStr;
 
-    const endDateStr = `${endTime.getDate().toString().padStart(2, "0")}/${(endTime.getMonth() + 1)
+    const endDateStr = `${endTime.getDate().toString().padStart(2, "0")}/${(
+      endTime.getMonth() + 1
+    )
       .toString()
       .padStart(2, "0")}/${endTime.getFullYear().toString().slice(-2)} ${endTime
       .getHours()

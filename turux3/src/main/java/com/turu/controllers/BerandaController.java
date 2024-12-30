@@ -23,7 +23,6 @@ import com.turu.model.Pengguna;
 import com.turu.repository.PenggunaRepository;
 import com.turu.service.PenggunaService;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +39,7 @@ public class BerandaController {
     private DataTidurService dataTidurService;
     private PenggunaRepository penggunaRepository;
     ZoneId zone = ZoneId.of("Asia/Jakarta");
+
     @Autowired
     public BerandaController(DataTidurService dataTidurService, PenggunaService penggunaService,
             PenggunaRepository penggunaRepository) {
@@ -74,9 +74,12 @@ public class BerandaController {
     public String beranda(Model model) {
         Pengguna pengguna = getLoggedInPengguna();
         boolean isSleeping = pengguna.isState();
+
         model.addAttribute("state", isSleeping);
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         DateTimeFormatter formatter4 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        // ================= CEK STATUS STATE PENGGUNA =================
         if (isSleeping) {
             model.addAttribute("buttonLabel", "Tombol Bangun");
             DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
@@ -87,16 +90,13 @@ public class BerandaController {
             model.addAttribute("buttonLabel", "Tombol Tidur");
         }
 
+        // ================= PERHITUNGAN SKOR DATA TIDUR =================
         DataTidur latestSleep = dataTidurService.cariTerbaruDataTidur(pengguna);
         model.addAttribute("dataTidur", latestSleep);
         if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
-            // Calculate age
             int age = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
-
-            // Determine min and max hours based on age
             double minHours;
             double maxHours;
-
             if (age <= 17) {
                 minHours = 8;
                 maxHours = 10;
@@ -108,30 +108,29 @@ public class BerandaController {
                 maxHours = 8;
             }
 
-            // Get sleep duration in hours using the existing durasi field
             LocalTime durasi = latestSleep.getDurasi();
             double sleepHours = durasi.getHour() + (durasi.getMinute() / 60.0);
-            
+
             // Pass data tidur ke html
             String waktu = "........";
             model.addAttribute("waktu", waktu);
             model.addAttribute("durasi", "----");
-                if (latestSleep != null && latestSleep.getWaktuSelesai() == null){
-                    model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
-                    waktu = latestSleep.getWaktuMulai().format(formatter4) + " —  ...";
-                    model.addAttribute("waktu", waktu);
-                } else if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
-                    model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
-                    model.addAttribute("waktuSelesaiFormatted", latestSleep.getWaktuSelesai().format(formatter3));
-                    waktu = latestSleep.getWaktuMulai().format(formatter4) + " — " + latestSleep.getWaktuSelesai().format(formatter4); 
-                    model.addAttribute("waktu", waktu);
-                    String durasi2 = durasi.getHour() + " j " + durasi.getMinute() + " m";
-                    model.addAttribute("durasi", durasi2);
-                }
-            
-            // Get start time hour for owl condition
-            int startHour = latestSleep.getWaktuMulai().getHour();
+            if (latestSleep != null && latestSleep.getWaktuSelesai() == null) {
+                model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
+                waktu = latestSleep.getWaktuMulai().format(formatter4) + " —  ...";
+                model.addAttribute("waktu", waktu);
+            } else if (latestSleep != null && latestSleep.getWaktuSelesai() != null) {
+                model.addAttribute("waktuMulaiFormatted", latestSleep.getWaktuMulai().format(formatter3));
+                model.addAttribute("waktuSelesaiFormatted", latestSleep.getWaktuSelesai().format(formatter3));
+                waktu = latestSleep.getWaktuMulai().format(formatter4) + " — "
+                        + latestSleep.getWaktuSelesai().format(formatter4);
+                model.addAttribute("waktu", waktu);
+                String durasi2 = durasi.getHour() + " jam " + durasi.getMinute() + " menit";
+                model.addAttribute("durasi", durasi2);
+            }
 
+            // ================= ILUSTRASI HEWAN =================
+            int startHour = latestSleep.getWaktuMulai().getHour();
             String mascot;
             String mascotName;
             String mascotDescription;
@@ -139,11 +138,11 @@ public class BerandaController {
             // Determine mascot based on conditions
             if (startHour >= 1 && startHour <= 13) {
                 mascot = "🦉";
-                mascotName = "Burung Hantu";
+                mascotName = "Burung Hantu Malam";
                 mascotDescription = String.format("Anda telah tidur %.1f jam, tetapi tidur anda terbalik", sleepHours);
             } else if (sleepHours >= minHours && sleepHours <= maxHours) {
                 mascot = "🦁";
-                mascotName = "Singa";
+                mascotName = "Singa Prima";
                 mascotDescription = "Anda telah tidur sesuai anjuran. Tidur Anda ideal";
             } else if (sleepHours > maxHours) {
                 mascot = "🐨";
@@ -151,7 +150,7 @@ public class BerandaController {
                 mascotDescription = "Anda telah tidur melebihi anjuran, tidur Anda berlebihan";
             } else {
                 mascot = "🦈";
-                mascotName = "Hiu";
+                mascotName = "Hiu Agresif";
                 mascotDescription = "Anda telah tidur di bawah anjuran, tidur Anda kurang";
             }
 
@@ -163,11 +162,13 @@ public class BerandaController {
         } else {
             // Default values if no sleep data is available
             model.addAttribute("mascot", "😴");
-            model.addAttribute("mascotName", "Belum ada data");
-            model.addAttribute("mascotDescription", "Silakan klik Tombol Tidur untuk mulai memonitoring tidur Anda");
+            model.addAttribute("mascotName", "Tertidur.. zZzZ");
+            model.addAttribute("mascotDescription", "Klik Tombol Bangun untuk melihat hasil data tidur Anda");
             model.addAttribute("sleepScore", "-");
         }
-        // STATISTIK
+
+
+        // STATISTIK BAR CHART
         LocalDate today = ZonedDateTime.now(zone).toLocalDate();
         LocalDate startDate = today.minusDays(6);
 
@@ -237,9 +238,9 @@ public class BerandaController {
         Pengguna pengguna = getLoggedInPengguna();
         boolean isDeleted = false;
         DataTidur dt = dataTidurService.cariTerbaruDataTidur(pengguna);
-        
+
         isDeleted = dataTidurService.addEnd(request.getEndTime(), pengguna);
-        
+
         pengguna.setState(false);
         penggunaRepository.save(pengguna);
         response.put("message", "End time and duration calculated successfully!");
@@ -292,11 +293,12 @@ public class BerandaController {
             this.endTime = endTime;
         }
     }
+
     @PostMapping("/tambahTidur")
-    public String tambahTidur(@ModelAttribute DataTidur dataTidur, RedirectAttributes redirectAttributes, Model model){
+    public String tambahTidur(@ModelAttribute DataTidur dataTidur, RedirectAttributes redirectAttributes, Model model) {
         Pengguna pengguna = getLoggedInPengguna();
         String message;
-        if (dataTidurService.cekDuplikatDataTidur(dataTidur, pengguna)){
+        if (dataTidurService.cekDuplikatDataTidur(dataTidur, pengguna)) {
             message = "Anda telah memiliki data tidur pada tanggal " + dataTidur.getWaktuSelesai().toLocalDate();
             redirectAttributes.addFlashAttribute("message", message);
             redirectAttributes.addFlashAttribute("openModal", true);
@@ -311,8 +313,10 @@ public class BerandaController {
         }
 
     }
+
     @PostMapping("/editTidur")
-    public String editTidur(@RequestParam("waktuMulai") String waktuMulai, @RequestParam("waktuSelesai") String waktuSelesai){
+    public String editTidur(@RequestParam("waktuMulai") String waktuMulai,
+            @RequestParam("waktuSelesai") String waktuSelesai) {
         DataTidur dataTidur = dataTidurService.cariTerbaruDataTidur(getLoggedInPengguna());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime mulai = LocalDateTime.parse(waktuMulai, formatter);
@@ -320,7 +324,7 @@ public class BerandaController {
         dataTidur.setWaktuMulai(mulai);
         dataTidur.setWaktuSelesai(selesai);
         dataTidurService.update(dataTidur, getLoggedInPengguna());
-        return  "redirect:/beranda";
+        return "redirect:/beranda";
     }
 
 }
