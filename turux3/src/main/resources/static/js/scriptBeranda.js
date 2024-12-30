@@ -153,8 +153,9 @@ stopwatchBtn.addEventListener("click", () => {
   run = !run;
 });
 
+//limit inputan
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Gabungkan logika untuk modal tambah dan edit
   ['tambahModal', 'editModal'].forEach(modalId => {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const waktuSelesai = modal.querySelector('[name="waktuSelesai"]');
 
       if (waktuMulai && waktuSelesai) {
-        // Hanya set validasi tanpa menyetel ulang nilai input
+        
         setupDateTimeValidation(waktuMulai, waktuSelesai);
       }
     }
@@ -170,9 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupDateTimeValidation(waktuMulai, waktuSelesai) {
+  const now = new Date(); // Waktu sekarang untuk validasi
+
   waktuMulai.addEventListener('change', function() {
     const startDate = new Date(this.value);
-    const now = new Date();
 
     // Cek jika waktu mulai di masa depan
     if (startDate > now) {
@@ -184,6 +186,13 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
     // Validasi waktu selesai yang sudah ada
     if (waktuSelesai.value) {
       const endDate = new Date(waktuSelesai.value);
+
+      if (endDate > now) {
+        alert("Waktu selesai tidak boleh di masa depan.");
+        waktuSelesai.value = '';
+        return;
+      }
+
       const maxDate = new Date(startDate);
       maxDate.setHours(maxDate.getHours() + 24);
 
@@ -196,18 +205,25 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
 
   waktuSelesai.addEventListener('change', function() {
     if (!waktuMulai.value) {
-      alert('Silakan pilih waktu mulai tidur terlebih dahulu');
+      alert('Silakan pilih waktu mulai terlebih dahulu');
       this.value = '';
       return;
     }
 
     const startDate = new Date(waktuMulai.value);
     const endDate = new Date(this.value);
+
+    if (endDate > now) {
+      alert("Waktu selesai tidak boleh di masa depan.");
+      this.value = '';
+      return;
+    }
+
     const maxDate = new Date(startDate);
     maxDate.setHours(maxDate.getHours() + 24);
 
     if (endDate < startDate) {
-      alert('Waktu bangun tidak boleh lebih awal dari waktu mulai tidur');
+      alert('Waktu selesai tidak boleh lebih awal dari waktu mulai.');
       this.value = '';
     } else if (endDate > maxDate) {
       const formattedMax = maxDate.toLocaleString('id-ID', {
@@ -217,7 +233,7 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
         hour: '2-digit',
         minute: '2-digit'
       });
-      alert(`Waktu bangun tidak boleh lebih dari ${formattedMax}`);
+      alert(`Waktu selesai tidak boleh lebih dari ${formattedMax}.`);
       this.value = '';
     }
   });
@@ -226,5 +242,8 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
   if (waktuMulai.value) {
     waktuMulai.dispatchEvent(new Event('change'));
   }
-}
 
+  if (waktuSelesai.value) {
+    waktuSelesai.dispatchEvent(new Event('change'));
+  }
+}
