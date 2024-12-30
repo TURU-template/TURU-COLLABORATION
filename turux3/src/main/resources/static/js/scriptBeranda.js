@@ -152,16 +152,6 @@ stopwatchBtn.addEventListener("click", () => {
   }
   run = !run;
 });
-// Function to format datetime to yyyy-MM-ddTHH:mm considering local timezone
-function formatDateTime(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   // Gabungkan logika untuk modal tambah dan edit
@@ -182,6 +172,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupDateTimeValidation(waktuMulai, waktuSelesai) {
   waktuMulai.addEventListener('change', function() {
     const startDate = new Date(this.value);
+    const now = new Date();
+
+    // Cek jika waktu mulai di masa depan
+    if (startDate > now) {
+      alert("Waktu mulai tidak boleh di masa depan.");
+      this.value = '';
+      return;
+    }
 
     // Validasi waktu selesai yang sudah ada
     if (waktuSelesai.value) {
@@ -229,3 +227,4 @@ function setupDateTimeValidation(waktuMulai, waktuSelesai) {
     waktuMulai.dispatchEvent(new Event('change'));
   }
 }
+
