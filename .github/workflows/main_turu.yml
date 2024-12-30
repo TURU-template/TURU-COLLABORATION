@@ -57,4 +57,4 @@ jobs:
         with:
           app-name: 'Turu'
           slot-name: 'Production'
-          package: './*.jar' # Pastikan path ini sesuai dengan hasil download
+          package: './turux3/target/*.jar' # Pastikan path ini sesuai dengan hasil download
