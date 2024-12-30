@@ -9,22 +9,22 @@ const ambientAudioElements = {};
 // Define all audio sources
 const soundSources = {
     // Color
-    white: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3",
-    brown: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3",
-    blue: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3",
-    pink: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3",
+    white: { url: "https://whitenoise.tmsoft.com/wntv/noise_white-0.mp3", volume: 0.2 },
+    brown: { url: "https://whitenoise.tmsoft.com/wntv/noise_brown-0.mp3", volume: 0.2 },
+    blue: { url: "https://whitenoise.tmsoft.com/wntv/noise_blue-0.mp3", volume: 0.2 },
+    pink: { url: "https://whitenoise.tmsoft.com/wntv/noise_pink-0.mp3", volume: 0.2 },
 
     // Ambient
-    jangkrik: "../asset/songs/Jangkrik.mp3",
-    ombak: "../asset/songs/Ombak.mp3",
-    api: "../asset/songs/Api.mp3",
-    hujan: "../asset/songs/Hujan.mp3",
-    burung: "../asset/songs/burung.mp3",
+    jangkrik: { url: "../asset/songs/Jangkrik.mp3", volume: 0.1 }, // 30% volume
+    ombak: { url: "../asset/songs/Ombak.mp3", volume: 0.3 }, // Default
+    api: { url: "../asset/songs/Api.mp3", volume: 1.0 },
+    hujan: { url: "../asset/songs/Hujan.mp3", volume: 0.2 },
+    burung: { url: "../asset/songs/bBrung.mp3", volume: 0.3 },
 
     // Lo-Fi
-    twilight: "../asset/songs/twilight.mp3",
-    monoman: "../asset/songs/Monoman.mp3",
-    yasumu: "../asset/songs/Yasumu.mp3"
+    twilight: { url: "../asset/songs/twilight.mp3", volume: 0.5 },
+    monoman: { url: "../asset/songs/Monoman.mp3", volume: 0.7 }, // 70% volume
+    yasumu: { url: "../asset/songs/Yasumu.mp3", volume: 0.5 }
 };
 
 // Ensure audio loops
@@ -37,8 +37,9 @@ function toggleAudio(soundKey) {
     if (isAmbientSound(soundKey)) {
         // Ambient Sound Logic
         if (!ambientAudioElements[soundKey]) {
-            ambientAudioElements[soundKey] = new Audio(soundSources[soundKey]);
+            ambientAudioElements[soundKey] = new Audio(soundSources[soundKey].url);
             ambientAudioElements[soundKey].loop = true;
+            ambientAudioElements[soundKey].volume = soundSources[soundKey].volume; // Default volume
         }
 
         const audio = ambientAudioElements[soundKey];
@@ -62,7 +63,8 @@ function toggleAudio(soundKey) {
             // Play the selected audio
             if (soundSources[soundKey]) {
                 stopAllAmbientSounds(); // Stop all Ambient sounds before playing Color/Lo-Fi
-                audioElement.src = soundSources[soundKey];
+                audioElement.src = soundSources[soundKey].url;
+                audioElement.volume = soundSources[soundKey].volume; // Default volume
                 audioElement.play();
                 savePlaybackState(soundKey);
 
@@ -77,6 +79,7 @@ function toggleAudio(soundKey) {
         }
     }
 }
+
 
 // Helper to check if a sound is Ambient
 function isAmbientSound(soundKey) {
