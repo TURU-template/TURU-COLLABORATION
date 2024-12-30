@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy JAR app to Azure Web App - Turu
 
 on:
@@ -30,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/*.jar'
+          path: './turux3/target/*.jar' # Sesuaikan path sesuai dengan output JAR
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,9 +47,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D0C92FBC4FCB4D6B91AA8AEB2A3F382C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AAE39D2571E24E348D90336D03FB38BD }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C27FECC9987E45ACAC015ACC6A808282 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -60,5 +57,4 @@ jobs:
         with:
           app-name: 'Turu'
           slot-name: 'Production'
-          package: '*.jar'
-          
+          package: './*.jar' # Pastikan path ini sesuai dengan hasil download
