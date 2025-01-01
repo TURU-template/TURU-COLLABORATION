@@ -250,6 +250,8 @@ a.nav-link {
 .turu-button {
   width: 150px; /* Set a specific width */
   height: 150px; /* Same as width */
+  justify-self: center;
+  place-self: center;
   background-color: var(--lilac);
   border-color: var(--purple);
   border-radius: 50%;
@@ -396,6 +398,10 @@ a.nav-link {
   height: 350pt;
   margin-top: 16pt;
   margin-bottom: 32pt;
+}
+
+.result{
+  text-align: center;
 }
 
 /*========== RADIO ==========*/
