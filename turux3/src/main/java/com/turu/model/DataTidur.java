@@ -60,13 +60,13 @@ public class DataTidur {
         } 
          
         // Rekomendasi durasi tidur berdasarkan umur
-        if (age <= 17) { // remaja
+        if (age >=13 && age <= 17) { // remaja
             minHours = 8;
             maxHours = 10;
         } else if (age >= 18 && age <= 64) { // dewasa
             minHours = 7;
             maxHours = 9;
-        } else if (age >= 65) { // lanjut usia
+        } else if (age == 65) {
             minHours = 7;
             maxHours = 8;
         } else {
