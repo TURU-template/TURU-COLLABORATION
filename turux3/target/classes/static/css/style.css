@@ -235,14 +235,6 @@ a.nav-link {
   margin-bottom: 0rem !important;
 }
 
-.center {
-  text-align: center !important;
-  align-items: center !important;
-  justify-content: center !important;
-  justify-self: center !important;
-  justify-items: center !important;
-}
-
 .middle {
   align-content: center !important;
 }
@@ -305,15 +297,11 @@ a.nav-link {
 }
 
 .floating-btn {
-  position: fixed;
-  bottom: 1vh;
-  /* margin-bottom: 100px; */
-  /* margin-bottom: 30%; */
-  margin-bottom: 18vh;
-
+  position: sticky;
+  bottom: 15vh;
   place-self: end;
-  right: 22px;
-  z-index: 1050;
+  margin-right: 24px;
+  z-index: 10;
   height: 80px;
   width: 80px;
 
@@ -667,6 +655,15 @@ a.nav-link {
   .column.qr {
     display: none;
   }
+
+  .floating-btn{
+    place-self: end;
+    right: 22px;
+  }
+
+  .modal-dialog {
+    margin-top: -10vh;
+  }
 }
 
 /*========== SCROLL ==========*/
@@ -759,6 +756,7 @@ a.nav-link {
 /* Modal Styles */
 .modal-dialog {
   justify-content: center;
+  margin-top: -5vh;
 }
 
 .modal-content {
@@ -813,4 +811,12 @@ a.nav-link {
 .modal-footer {
   justify-content: center;
   border-top: none;
+}
+
+.center {
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  justify-self: center !important;
+  justify-items: center !important;
 }
