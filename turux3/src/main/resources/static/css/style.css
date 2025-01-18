@@ -299,8 +299,8 @@ a.nav-link {
 .floating-btn {
   position: sticky;
   bottom: 15vh;
-  place-self: end;
-  margin-right: 24px;
+  place-self: start;
+  margin-left: 71%;
   z-index: 10;
   height: 80px;
   width: 80px;
@@ -657,8 +657,8 @@ a.nav-link {
   }
 
   .floating-btn{
-    place-self: end;
-    right: 22px;
+    margin-left: unset;
+    margin-right: 4.5rem !important;
   }
 
   .modal-dialog {
