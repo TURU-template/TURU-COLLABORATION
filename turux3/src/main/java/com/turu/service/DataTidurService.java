@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.Duration;
 
+import com.turu.model.Analisis;
 import com.turu.model.DataTidur;
 import com.turu.model.Pengguna;
 import com.turu.repository.DataTidurRepository;
@@ -80,6 +82,37 @@ public class DataTidurService {
         dt.hitungSkor(Period.between(pengguna.getTanggalLahir(),  ZonedDateTime.now(zone).toLocalDate()).getYears());
         dt.setTanggal(dt.getWaktuSelesai().toLocalDate());
         dataTidurRepository.save(dt);
+    }
+    public Analisis analisisTidur(Long penggunaId) {
+        List<DataTidur> dataTidurList = dataTidurRepository.findTop7ByPenggunaIdOrderByWaktuMulaiDesc(penggunaId);
+        
+        Duration totalWaktuBangun = Duration.ZERO;
+        int totalSkor = 0;
+        LocalDateTime waktuTidurPertama = dataTidurList.get(0).getWaktuMulai();
+        LocalDateTime waktuBangunTerakhir = dataTidurList.get(0).getWaktuSelesai();
+
+        for (DataTidur dataTidur : dataTidurList) {
+            totalWaktuBangun = totalWaktuBangun.plus(Duration.between(waktuTidurPertama, dataTidur.getWaktuSelesai()));
+            totalSkor += dataTidur.getSkor();
+
+            if (dataTidur.getWaktuMulai().isBefore(waktuTidurPertama)) {
+                waktuTidurPertama = dataTidur.getWaktuMulai();
+            }
+            if (dataTidur.getWaktuSelesai().isAfter(waktuBangunTerakhir)) {
+                waktuBangunTerakhir = dataTidur.getWaktuSelesai();
+            }
+        }
+
+        double rataWaktuBangun = totalWaktuBangun.getSeconds() / (double) dataTidurList.size();
+        double rataSkorTidur = totalSkor / (double) dataTidurList.size();
+        Duration rentangTidur = Duration.between(waktuTidurPertama, waktuBangunTerakhir);
+
+        Analisis statistikTidur = new Analisis();
+        statistikTidur.setRataWaktuBangun(rataWaktuBangun);
+        statistikTidur.setRataSkorTidur(rataSkorTidur);
+        statistikTidur.setRentangTidur(rentangTidur);
+
+        return statistikTidur;
     }
 
     // STATISTIK
