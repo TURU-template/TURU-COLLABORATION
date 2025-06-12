@@ -35,7 +35,7 @@ public class AuthApiController {
                     .body(Map.of("error", "Username atau password salah"));
         }
 
-        LoginResponse response = new LoginResponse(pengguna.getId(), pengguna.getUsername());
+        LoginResponse response = new LoginResponse(pengguna.getId(), pengguna.getUsername(), pengguna.getJk(), pengguna.getTanggalLahir());
         return ResponseEntity.ok(response);
     }
     @PostMapping("/register")
