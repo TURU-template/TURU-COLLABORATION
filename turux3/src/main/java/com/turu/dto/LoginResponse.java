@@ -1,4 +1,4 @@
-package com.turu.model;
+package com.turu.dto;
 
 import java.time.LocalDate;
 import java.util.Map;

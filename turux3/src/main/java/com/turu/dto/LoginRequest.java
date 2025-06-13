@@ -1,4 +1,4 @@
-package com.turu.model;
+package com.turu.dto;
 
 public class LoginRequest {
     private String username;

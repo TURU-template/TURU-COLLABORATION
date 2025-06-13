@@ -1,7 +1,7 @@
 package com.turu.controllers;
 
-import com.turu.model.LoginRequest;
-import com.turu.model.LoginResponse;
+import com.turu.dto.LoginRequest;
+import com.turu.dto.LoginResponse;
 import com.turu.model.Pengguna;
 import com.turu.repository.PenggunaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
