@@ -181,7 +181,7 @@ public class DataTidurApiController {
             }
 
             if (startTime == null || durationTime == null) {
-                mascot = "❓";
+                mascot = "😊";
                 mascotName = "Tidak Ada Data";
                 mascotDescription = "Data waktu tidur tidak lengkap.";
                 System.out.println("DEBUG_BACKEND: Data waktu tidur terakhir untuk pengguna " + userId + " tidak lengkap. Menggunakan default maskot.");
