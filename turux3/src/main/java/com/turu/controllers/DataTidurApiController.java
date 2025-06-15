@@ -2,8 +2,8 @@
 package com.turu.controllers;
 
 import com.turu.dto.SleepRecordRequest;
-import com.turu.dto.StartSleepRequest;
-import com.turu.dto.EndSleepRequest;
+import com.turu.dto.StartSleepRequest; // Pastikan StartSleepRequest sudah ada
+import com.turu.dto.EndSleepRequest;   // Pastikan EndSleepRequest sudah ada
 import com.turu.model.Analisis;
 import com.turu.model.DataTidur;
 import com.turu.model.Pengguna;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@RestController
+@RestController // Ini sudah benar
 @RequestMapping("/api")
 public class DataTidurApiController {
 
@@ -33,10 +33,66 @@ public class DataTidurApiController {
     @Autowired
     private PenggunaRepository penggunaRepository;
 
-    // Helper untuk mendapatkan Pengguna
+    // Helper untuk mendapatkan Pengguna berdasarkan userId dari path/body
     private Optional<Pengguna> getPenggunaById(Integer userId) {
         return penggunaRepository.findById(userId);
     }
+
+    // =========================================================================================
+    // ROUTE BARU UNTUK FLUTTER: /api/get-session-data-flutter/{userId}
+    // Ini menggantikan fungsi get-session-data yang ada di BerandaController untuk Flutter
+    // =========================================================================================
+    @GetMapping("/get-session-data-flutter/{userId}") // <-- Route khusus untuk Flutter
+    public ResponseEntity<SessionDataFlutter> getSessionDataForFlutter(@PathVariable Integer userId) {
+        Optional<Pengguna> optionalPengguna = getPenggunaById(userId);
+        if (optionalPengguna.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SessionDataFlutter(false, null, "Pengguna not found with ID: " + userId));
+        }
+        Pengguna pengguna = optionalPengguna.get();
+
+        if (pengguna.isState()) { // Memeriksa status tidur pengguna
+            DataTidur ongoingSession = dataTidurService.cariTerbaruDataTidur(pengguna);
+            if (ongoingSession != null) {
+                SessionDataFlutter sessionData = new SessionDataFlutter(pengguna.isState(), ongoingSession.getWaktuMulai(), "Active session found.");
+                return ResponseEntity.ok(sessionData);
+            }
+        }
+        // Jika tidak ada sesi aktif atau pengguna.isState() adalah false
+        return ResponseEntity.ok(new SessionDataFlutter(pengguna.isState(), null, "No active session."));
+    }
+
+    // =========================================================================================
+    // DTO BARU UNTUK FLUTTER (agar tidak bingung dengan SessionData lama di BerandaController)
+    // Kelas ini akan digunakan sebagai format respons JSON untuk getSessionDataForFlutter
+    // =========================================================================================
+    public static class SessionDataFlutter {
+        private boolean state;
+        private LocalDateTime startTime;
+        private String message; // Tambahkan message untuk debugging lebih baik di Flutter
+
+        public SessionDataFlutter(boolean state, LocalDateTime startTime, String message) {
+            this.state = state;
+            this.startTime = startTime;
+            this.message = message;
+        }
+
+        // Getters untuk serialisasi JSON (Spring Boot otomatis menggunakan getter)
+        public boolean isState() {
+            return state;
+        }
+
+        public LocalDateTime getStartTime() {
+            return startTime;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    // =========================================================================================
+    // Endpoint yang sudah ada di DataTidurApiController (tanpa perubahan besar)
+    // =========================================================================================
 
     @PostMapping("/sleep-records/manual") // POST /api/sleep-records/manual
     public ResponseEntity<?> addManualSleepRecord(@RequestBody SleepRecordRequest request) {
@@ -55,16 +111,10 @@ public class DataTidurApiController {
         }
 
         try {
-            // Panggil metode service yang mengembalikan void
             dataTidurService.tambahManual(request.getStartTime(), request.getEndTime(), pengguna);
-
-            // Karena service mengembalikan void, kita harus mengambil record terbaru setelah disimpan.
-            // Ini akan mengambil record yang baru saja ditambahkan (mengasumsikan ini adalah yang terbaru).
             DataTidur savedRecord = dataTidurService.cariTerbaruDataTidur(pengguna);
 
             if (savedRecord == null) {
-                // Ini seharusnya tidak terjadi jika tambahManual berhasil,
-                // tapi sebagai fallback untuk kasus di mana cariTerbaruDataTidur gagal.
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to retrieve saved record after manual addition."));
             }
 
@@ -84,7 +134,6 @@ public class DataTidurApiController {
         }
     }
 
-
     @PostMapping("/sleep/start") // POST /api/sleep/start
     public ResponseEntity<?> startSleepTracking(@RequestBody StartSleepRequest request) {
         if (request.getUserId() == null || request.getStartTime() == null) {
@@ -98,11 +147,11 @@ public class DataTidurApiController {
         Pengguna pengguna = optionalPengguna.get();
 
         try {
-            // Panggil metode service yang mengembalikan void
             dataTidurService.addStart(request.getStartTime(), pengguna);
+            // Tambahkan logic ini untuk update state pengguna jika diperlukan dari BerandaController yang lama
+            pengguna.setState(true);
+            penggunaRepository.save(pengguna); // Simpan perubahan state pengguna
 
-            // Karena service mengembalikan void, kita harus mengambil record terbaru setelah disimpan.
-            // Ini akan mengambil record yang baru saja ditambahkan (mengasumsikan ini adalah yang terbaru).
             DataTidur newRecord = dataTidurService.cariTerbaruDataTidur(pengguna);
 
             if (newRecord == null) {
@@ -133,10 +182,13 @@ public class DataTidurApiController {
 
         try {
             boolean deletedBecauseTooShort = dataTidurService.addEnd(request.getEndTime(), pengguna);
+            // Tambahkan logic ini untuk update state pengguna jika diperlukan dari BerandaController yang lama
+            pengguna.setState(false);
+            penggunaRepository.save(pengguna); // Simpan perubahan state pengguna
+
             if (deletedBecauseTooShort) {
                 return ResponseEntity.ok(Map.of("message", "Sleep record was too short and deleted."));
             } else {
-                // Ambil record yang baru saja diakhiri/diperbarui
                 DataTidur updatedRecord = dataTidurService.cariTerbaruDataTidur(pengguna);
                 
                 if (updatedRecord == null || updatedRecord.getWaktuSelesai() == null) {
@@ -166,7 +218,6 @@ public class DataTidurApiController {
 
         Analisis analisis = dataTidurService.analisisTidur(userId);
 
-        // Handle case where no data is returned from service
         if (analisis == null || analisis.getRataWaktuBangun() == 0 && analisis.getRataSkorTidur() == 0 && analisis.getRentangTidur() == null) {
             return ResponseEntity.ok(Map.of(
                 "message", "No sleep data available for analysis.",
