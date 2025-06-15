@@ -6,80 +6,104 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
 import java.time.Duration; // Pastikan Duration terimport
-
-import com.turu.model.Analisis; // Asumsi kelas Analisis sudah ada
-import com.turu.model.DataTidur;
-import com.turu.model.Pengguna;
-import com.turu.repository.DataTidurRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.ZoneId;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;  // Untuk sorting
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.turu.model.Analisis; // Asumsi kelas Analisis sudah ada
+import com.turu.model.DataTidur;
+import com.turu.model.Pengguna;
+import com.turu.repository.DataTidurRepository; // Pastikan repository terimport dengan benar
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired; // Tambahkan import Autowired
+
 @Service
 public class DataTidurService {
 
+    // Menggunakan constructor injection adalah praktik terbaik
+    private final DataTidurRepository dataTidurRepository;
+    private final ZoneId zone = ZoneId.of("Asia/Jakarta"); // Tetap pertahankan zona waktu jika digunakan
 
-    ZoneId zone = ZoneId.of("Asia/Jakarta");
-    private DataTidurRepository dataTidurRepository;
-
+    // Constructor Injection untuk DataTidurRepository
+    @Autowired // @Autowired opsional jika hanya ada satu constructor
     public DataTidurService(DataTidurRepository dataTidurRepository) {
         this.dataTidurRepository = dataTidurRepository;
     }
 
+    /**
+     * Menghapus semua data tidur untuk pengguna tertentu.
+     * Menggunakan method repository findByPengguna_IdOrderByWaktuSelesaiDesc.
+     * @param pengguna Objek Pengguna.
+     */
     public void hapusSemuaDataTidur(Pengguna pengguna) {
-        List<DataTidur> dataTidurList = dataTidurRepository.findByPengguna(pengguna);
+        // Menggunakan findByPengguna_IdOrderByWaktuSelesaiDesc yang mengembalikan List
+        List<DataTidur> dataTidurList = dataTidurRepository.findByPengguna_IdOrderByWaktuSelesaiDesc(pengguna.getId());
         if (!dataTidurList.isEmpty()) {
             dataTidurRepository.deleteAll(dataTidurList);
         }
     }
 
-    // TIDUR - START
+    /**
+     * Menambahkan record awal tidur.
+     * @param time Waktu mulai tidur.
+     * @param pengguna Objek Pengguna.
+     */
     public void addStart(LocalDateTime time, Pengguna pengguna) {
-        LocalDateTime adjustedTime = time.plusHours(7);
-        DataTidur newDt = new DataTidur(); // <-- PENTING: Membuat instance baru
+        LocalDateTime adjustedTime = time.plusHours(7); // Penyesuaian zona waktu +7 jam
+        DataTidur newDt = new DataTidur();
         newDt.setWaktuMulai(adjustedTime);
-        newDt.setIdPengguna(pengguna);
-        // Pastikan tanggal diset agar nanti bisa di-query berdasarkan tanggal
-        newDt.setTanggal(adjustedTime.toLocalDate()); 
+        newDt.setIdPengguna(pengguna); // Set relasi Pengguna
+        newDt.setTanggal(adjustedTime.toLocalDate());
         dataTidurRepository.save(newDt);
     }
 
+    /**
+     * Mengakhiri record tidur yang sedang berjalan.
+     * @param time Waktu selesai tidur.
+     * @param pengguna Objek Pengguna.
+     * @return true jika record dihapus karena durasi terlalu singkat, false jika disimpan.
+     */
     public boolean addEnd(LocalDateTime time, Pengguna pengguna) {
-        LocalDateTime adjustedTime = time.plusHours(7);
+        LocalDateTime adjustedTime = time.plusHours(7); // Penyesuaian zona waktu +7 jam
 
-        // Menggunakan Optional untuk penanganan yang lebih baik
-        Optional<DataTidur> optionalDtToUpdate = dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
+        // Menggunakan findTopByPengguna_IdOrderByWaktuMulaiDesc untuk mencari sesi aktif terbaru
+        Optional<DataTidur> optionalDtToUpdate = dataTidurRepository.findTopByPengguna_IdOrderByWaktuMulaiDesc(pengguna.getId());
         
         if (optionalDtToUpdate.isEmpty()) {
-            System.err.println("Error: No active sleep record found for user " + pengguna.getUsername() + " to end.");
-            return false; // Mengindikasikan gagal mengakhiri
+            System.err.println("Error: Tidak ada sesi tidur aktif untuk diakhiri untuk user " + pengguna.getUsername() + ".");
+            return false;
         }
         DataTidur dtToUpdate = optionalDtToUpdate.get();
 
-        // Pastikan waktu mulai tidak null sebelum menghitung durasi
         if (dtToUpdate.getWaktuMulai() == null) {
-             System.err.println("Error: Start time is null for the active sleep record for user " + pengguna.getUsername());
-             return false; // Sesi tidak valid
+            System.err.println("Error: Waktu mulai null untuk sesi tidur aktif user " + pengguna.getUsername());
+            return false;
+        }
+        // Jika sesi sudah diakhiri sebelumnya (sudah ada waktuSelesai)
+        if (dtToUpdate.getWaktuSelesai() != null) {
+            System.err.println("Error: Sesi tidur untuk user " + pengguna.getUsername() + " sudah diakhiri sebelumnya.");
+            return false; // Sesi sudah diakhiri
         }
 
         dtToUpdate.setWaktuSelesai(adjustedTime);
-        dtToUpdate.setTanggal(adjustedTime.toLocalDate());
-        dtToUpdate.hitungDurasi(); // Hitung durasi setelah waktu selesai diset
+        dtToUpdate.setTanggal(adjustedTime.toLocalDate()); // Perbarui tanggal jika waktu selesai berpindah hari
+        dtToUpdate.hitungDurasi(); // Panggil hitungDurasi di model DataTidur
         
         int usia = 0;
         if (pengguna.getTanggalLahir() != null) {
             usia = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
+        } else {
+            System.err.println("Peringatan: Tanggal lahir pengguna null untuk perhitungan skor. Menggunakan usia 0.");
         }
-        dtToUpdate.hitungSkor(usia);
+        dtToUpdate.hitungSkor(usia); // Panggil hitungSkor di model DataTidur
 
-        // Cek durasi minimal untuk disimpan
-        if (dtToUpdate.getDurasi().isBefore(LocalTime.of(0, 15, 0))) { // Durasi kurang dari 15 menit
+        // Cek durasi minimal untuk disimpan (misal: kurang dari 15 menit dihapus)
+        // Pastikan getDurasi() mengembalikan LocalTime dan isBefore berfungsi
+        if (dtToUpdate.getDurasi() != null && dtToUpdate.getDurasi().isBefore(LocalTime.of(0, 15, 0))) {
             dataTidurRepository.deleteById(dtToUpdate.getId());
             return true; // Mengindikasikan dihapus karena terlalu singkat
         } else {
@@ -88,83 +112,110 @@ public class DataTidurService {
         }
     }
 
-    // Metode ini untuk menambah data tidur manual
-    public void tambah(DataTidur dt, Pengguna pengguna){
-        // Ini adalah metode yang Anda sebutkan sudah ada.
-        // PENTING: Asumsi dt yang masuk ke sini sudah diisi waktuMulai dan waktuSelesai
-        // Serta sudah ada penyesuaian +7 jam di sisi controller/caller jika diperlukan.
-        // Jika tidak, Anda perlu menambahkannya di sini.
-        // Untuk konsistensi, mari kita sesuaikan di sini juga:
-        if (dt.getWaktuMulai() != null && dt.getWaktuSelesai() != null) {
-            dt.setWaktuMulai(dt.getWaktuMulai().plusHours(7));
-            dt.setWaktuSelesai(dt.getWaktuSelesai().plusHours(7));
-        }
+    /**
+     * Menambahkan record tidur secara manual.
+     * @param startTime Waktu mulai tidur.
+     * @param endTime Waktu selesai tidur.
+     * @param pengguna Objek Pengguna.
+     * @throws IllegalArgumentException jika data tidur duplikat.
+     */
+    public void tambahManual(LocalDateTime startTime, LocalDateTime endTime, Pengguna pengguna) {
+        // Penyesuaian zona waktu +7 jam untuk konsistensi
+        LocalDateTime adjustedStartTime = startTime.plusHours(7);
+        LocalDateTime adjustedEndTime = endTime.plusHours(7);
 
-        dt.setIdPengguna(pengguna);
-        dt.setTanggal(dt.getWaktuSelesai().toLocalDate());
-        dt.hitungDurasi();
+        DataTidur manualDt = new DataTidur();
+        manualDt.setWaktuMulai(adjustedStartTime);
+        manualDt.setWaktuSelesai(adjustedEndTime);
+        manualDt.setIdPengguna(pengguna); // Set relasi Pengguna
+        manualDt.setTanggal(adjustedEndTime.toLocalDate());
+
+        // Pastikan hitungDurasi dan hitungSkor tidak bergantung pada save ke DB terlebih dahulu
+        manualDt.hitungDurasi();
         
         int usia = 0;
         if (pengguna.getTanggalLahir() != null) {
             usia = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
+        } else {
+             System.err.println("Peringatan: Tanggal lahir pengguna null untuk perhitungan skor manual. Menggunakan usia 0.");
         }
-        dt.hitungSkor(usia);
+        manualDt.hitungSkor(usia);
         
-        dataTidurRepository.save(dt);
+        // Pengecekan duplikat sebelum menyimpan
+        if (cekDuplikatDataTidur(manualDt, pengguna)) {
+            throw new IllegalArgumentException("Data tidur untuk tanggal ini sudah ada.");
+        }
+        
+        dataTidurRepository.save(manualDt);
     }
 
-    // Metode ini digunakan oleh Controller untuk cek duplikat
+    /**
+     * Memeriksa apakah ada data tidur yang sudah ada untuk tanggal yang sama bagi pengguna tertentu.
+     * @param dt DataTidur yang akan dicek.
+     * @param pengguna Objek Pengguna.
+     * @return true jika ada duplikat, false jika tidak.
+     */
     public boolean cekDuplikatDataTidur(DataTidur dt, Pengguna pengguna){
-        List<DataTidur> A = dataTidurRepository.findByPengguna(pengguna);
-        for (DataTidur data : A){
-            if (data.getTanggal().equals(dt.getWaktuSelesai().toLocalDate())){
+        // Menggunakan findByPengguna yang mengembalikan List berdasarkan objek Pengguna
+        // Asumsi DataTidurRepository memiliki List<DataTidur> findByPengguna(Pengguna pengguna);
+        List<DataTidur> existingData = dataTidurRepository.findByPengguna(pengguna);
+        for (DataTidur data : existingData){
+            // Cek berdasarkan tanggal record
+            if (data.getTanggal() != null && dt.getTanggal() != null && data.getTanggal().equals(dt.getTanggal())){
                 return true ;
             }
         }
         return false ;
     }
 
+    /**
+     * Memperbarui record DataTidur yang sudah ada.
+     * @param dt Objek DataTidur yang akan diperbarui.
+     * @param pengguna Objek Pengguna.
+     */
     public void update(DataTidur dt, Pengguna pengguna){
-        // PENTING: Asumsi dt yang masuk ke sini sudah diisi waktuMulai dan waktuSelesai
-        // dan sudah disesuaikan +7 jam jika diperlukan di sisi caller.
         dt.hitungDurasi();
         
         int usia = 0;
         if (pengguna.getTanggalLahir() != null) {
             usia = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
+        } else {
+            System.err.println("Peringatan: Tanggal lahir pengguna null untuk perhitungan skor update. Menggunakan usia 0.");
         }
         dt.hitungSkor(usia);
         dt.setTanggal(dt.getWaktuSelesai().toLocalDate()); // Perbarui tanggal juga jika waktu selesai berubah
         dataTidurRepository.save(dt);
     }
 
-    // =========================================================================================
-    // METODE ANALISIS TIDUR YANG DIMODIFIKASI SECARA MENYELURUH
-    // Sekarang metode ini akan melakukan semua perhitungan analisis kompleks
-    // =========================================================================================
-    public Analisis analisisTidur(Integer userId, Pengguna pengguna) { // Menerima objek Pengguna
-        // 1. Ambil semua data tidur pengguna
-        List<DataTidur> allSleepRecords = dataTidurRepository.findByPengguna(pengguna);
+    /**
+     * Melakukan analisis tidur komprehensif untuk pengguna tertentu.
+     * Membutuhkan minimal 7 data tidur lengkap untuk analisis penuh.
+     * @param userId ID pengguna.
+     * @param pengguna Objek Pengguna.
+     * @return Objek Analisis berisi hasil, maskot, dan saran.
+     */
+    public Analisis analisisTidur(Integer userId, Pengguna pengguna) {
+        // Menggunakan findByPengguna_IdOrderByWaktuSelesaiDesc untuk mengambil semua riwayat
+        List<DataTidur> allSleepRecords = dataTidurRepository.findByPengguna_IdOrderByWaktuSelesaiDesc(userId);
         
-        // Filter hanya data tidur yang lengkap dan urutkan dari yang terbaru
         List<DataTidur> completedSleepRecords = allSleepRecords.stream()
-            .filter(record -> record.getWaktuSelesai() != null && record.getWaktuMulai() != null)
-            .sorted(Comparator.comparing(DataTidur::getWaktuSelesai).reversed()) // Urutkan dari yang terbaru
+            .filter(record -> record.getWaktuSelesai() != null && record.getWaktuMulai() != null && record.getDurasi() != null && record.getSkor() != null) // Filter data yang lengkap
+            .sorted(Comparator.comparing(DataTidur::getWaktuSelesai).reversed())
             .collect(Collectors.toList());
 
-        // 2. Cek jumlah data tidur yang lengkap
         if (completedSleepRecords.size() < 7) {
-            // Jika kurang dari 7, kembalikan objek Analisis dengan pesan khusus
-            // Controller harus memeriksa ini.
             Analisis analisis = new Analisis();
             analisis.setMessage("Not enough completed sleep data for analysis.");
             analisis.setRequiredData(7);
             analisis.setCurrentData(completedSleepRecords.size());
             analisis.setSuggestion("Anda membutuhkan minimal 7 data tidur yang lengkap untuk mendapatkan hasil analisis tidur anda.");
+            analisis.setMascot("😊");
+            analisis.setMascotName("Tidak Ada Data");
+            analisis.setMascotDescription("Belum ada cukup data tidur untuk analisis.");
+            analisis.setRataSkorTidur(0);
             return analisis;
         }
 
-        // 3. Ambil 7 data tidur terakhir
         List<DataTidur> last7SleepRecords = completedSleepRecords.subList(0, Math.min(completedSleepRecords.size(), 7));
 
         long totalSleepDurationSeconds = 0;
@@ -178,78 +229,64 @@ public class DataTidurService {
 
         int totalScore = 0;
 
-        // Loop melalui 7 data tidur terakhir untuk perhitungan
         for (DataTidur record : last7SleepRecords) {
-            // Durasi tidur
-            if (record.getDurasi() != null) {
-                totalSleepDurationSeconds += record.getDurasi().toSecondOfDay();
-            }
-
-            // Skor
+            totalSleepDurationSeconds += record.getDurasi().toSecondOfDay(); // Menggunakan LocalTime.toSecondOfDay()
             totalScore += record.getSkor();
 
-            // Waktu mulai (untuk rata-rata dan variabilitas)
             LocalTime startTime = record.getWaktuMulai().toLocalTime();
             sumStartSecondOfDay += startTime.toSecondOfDay();
             if (startTime.isBefore(minStartTime)) minStartTime = startTime;
             if (startTime.isAfter(maxStartTime)) maxStartTime = startTime;
 
-            // Waktu selesai/bangun (untuk rata-rata dan variabilitas)
             LocalTime endTime = record.getWaktuSelesai().toLocalTime();
             sumEndSecondOfDay += endTime.toSecondOfDay();
             if (endTime.isBefore(minEndTime)) minEndTime = endTime;
             if (endTime.isAfter(maxEndTime)) maxEndTime = endTime;
         }
 
-        // Perhitungan Rata-rata
-        double averageSleepDuration = (double) totalSleepDurationSeconds / last7SleepRecords.size(); // dalam detik
+        double averageSleepDuration = (double) totalSleepDurationSeconds / last7SleepRecords.size();
         double averageScore = (double) totalScore / last7SleepRecords.size();
         LocalTime averageStartTime = LocalTime.ofSecondOfDay((long) (sumStartSecondOfDay / last7SleepRecords.size()));
         LocalTime averageEndTime = LocalTime.ofSecondOfDay((long) (sumEndSecondOfDay / last7SleepRecords.size()));
 
-        // Perhitungan Variabilitas
-        Duration sleepTimeVariability = Duration.between(minStartTime, maxStartTime).abs();
-        Duration wakeTimeVariability = Duration.between(minEndTime, maxEndTime).abs();
+        // Variabilitas: Duration.between membutuhkan Temporal dengan tanggal. Gunakan atDate(LocalDate.MIN) untuk konversi sementara.
+        Duration sleepTimeVariability = Duration.between(minStartTime.atDate(LocalDate.MIN), maxStartTime.atDate(LocalDate.MIN)).abs();
+        Duration wakeTimeVariability = Duration.between(minEndTime.atDate(LocalDate.MIN), maxEndTime.atDate(LocalDate.MIN)).abs();
         
-        // Batas toleransi untuk konsistensi (misal: 45 menit)
-        Duration consistencyTolerance = Duration.ofMinutes(45); // Bisa disesuaikan
+        Duration consistencyTolerance = Duration.ofMinutes(45);
 
         boolean isSleepTimeConsistent = sleepTimeVariability.compareTo(consistencyTolerance) <= 0;
         boolean isWakeTimeConsistent = wakeTimeVariability.compareTo(consistencyTolerance) <= 0;
 
-        // Dapatkan rentang tidur ideal berdasarkan usia
-        int age = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
+        int ageUser = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
         double minIdealHours;
         double maxIdealHours;
-        if (age <= 17) { minIdealHours = 8; maxIdealHours = 10; }
-        else if (age >= 18 && age <= 64) { minIdealHours = 7; maxIdealHours = 9; }
+        if (ageUser <= 17) { minIdealHours = 8; maxIdealHours = 10; }
+        else if (ageUser >= 18 && ageUser <= 64) { minIdealHours = 7; maxIdealHours = 9; }
         else { minIdealHours = 7; maxIdealHours = 8; }
         
         double averageSleepDurationHours = averageSleepDuration / 3600.0;
         boolean isDurationIdeal = averageSleepDurationHours >= minIdealHours && averageSleepDurationHours <= maxIdealHours;
 
-
-        // Penentuan Maskot dan Saran
-        String mascot = "❓"; // Default jika tidak ada yang cocok
+        String mascot = "😊";
         String mascotName = "Tidak Ada Data";
         String mascotDescription = "Belum ada cukup data tidur untuk analisis.";
         List<String> suggestions = new ArrayList<>();
 
         if (isDurationIdeal) {
-            mascot = "🦁"; // Singa Prima
+            mascot = "🦁";
             mascotName = "Singa Prima";
             mascotDescription = "Durasi tidur Anda sudah ideal!";
         } else if (averageSleepDurationHours < minIdealHours) {
-            mascot = "🦉"; // Burung Hantu (kurang tidur)
+            mascot = "🦉";
             mascotName = "Burung Hantu";
             mascotDescription = "Durasi tidur Anda kurang dari yang direkomendasikan.";
-        } else { // averageSleepDurationHours > maxIdealHours
-            mascot = "🐼"; // Panda Tidur (tidur berlebihan)
+        } else {
+            mascot = "🐼";
             mascotName = "Panda Tidur";
             mascotDescription = "Durasi tidur Anda melebihi yang direkomendasikan.";
         }
 
-        // Tambahkan saran berdasarkan konsistensi
         if (!isSleepTimeConsistent) {
             suggestions.add("Waktu tidur Anda kurang konsisten (variasi " + formatDurationShort(sleepTimeVariability) + "). Coba tetapkan jadwal tidur yang lebih teratur.");
         }
@@ -257,35 +294,28 @@ public class DataTidurService {
             suggestions.add("Waktu bangun Anda kurang konsisten (variasi " + formatDurationShort(wakeTimeVariability) + "). Usahakan bangun pada jam yang sama setiap hari.");
         }
         
-        // Saran durasi (jika belum ideal)
         if (!isDurationIdeal) {
             if (averageSleepDurationHours < minIdealHours) {
                  suggestions.add(String.format("Anda tidur rata-rata %.1f jam, idealnya %.0f-%0.f jam. Coba tambah durasi tidur Anda.", averageSleepDurationHours, minIdealHours, maxIdealHours));
-            } else { // > maxIdealHours
+            } else {
                  suggestions.add(String.format("Anda tidur rata-rata %.1f jam, idealnya %.0f-%0.f jam. Tidur berlebihan kadang bisa berdampak negatif.", averageSleepDurationHours, minIdealHours, maxIdealHours));
             }
         } else {
-             // Jika durasi ideal, tambahkan saran yang sesuai
              suggestions.add("Pertahankan durasi tidur yang ideal ini untuk kesehatan optimal.");
         }
 
-        // Gabungkan saran menjadi satu string
         String finalSuggestion = suggestions.isEmpty() ? "Terus lacak tidur Anda untuk mendapatkan saran yang lebih personal." : String.join("\n", suggestions);
 
-
-        // Bangun objek Analisis yang baru dan lebih kaya
         Analisis finalAnalisis = new Analisis();
-        finalAnalisis.setRataWaktuBangun(averageSleepDuration); // Ini sekarang rata-rata durasi tidur dalam detik
-        finalAnalisis.setRataSkorTidur(averageScore);
-        finalAnalisis.setRentangTidur(Duration.between(averageStartTime.atDate(LocalDate.MIN), averageEndTime.atDate(LocalDate.MIN))); // Gunakan rentang antara rata-rata waktu tidur dan bangun (bukan min-max dari semua data)
-                                                                                                                        // Atau definisikan rentang total dari data yang diambil.
-                                                                                                                        // Untuk contoh ini, saya menggunakan rentang rata-rata saja.
-        finalAnalisis.setMascot(mascot); // Jika Analisis punya setter untuk mascot
-        finalAnalisis.setMascotName(mascotName); // Jika Analisis punya setter untuk mascotName
-        finalAnalisis.setMascotDescription(mascotDescription); // Jika Analisis punya setter untuk mascotDescription
-        finalAnalisis.setSuggestion(finalSuggestion); // Jika Analisis punya setter untuk suggestion
+        finalAnalisis.setRataWaktuBangun(averageSleepDuration);
+        finalAnalisis.setRataSkorTidur((int) Math.round(averageScore));
+        finalAnalisis.setRentangTidur(Duration.between(averageStartTime.atDate(LocalDate.MIN), averageEndTime.atDate(LocalDate.MIN)));
+        finalAnalisis.setMascot(mascot);
+        finalAnalisis.setMascotName(mascotName);
+        finalAnalisis.setMascotDescription(mascotDescription);
+        finalAnalisis.setSuggestion(finalSuggestion);
 
-        // Tambahkan atribut baru ke objek Analisis (jika model Analisis mendukungnya)
+        // Jika model Analisis Anda memiliki setter untuk ini, aktifkan baris ini:
         // finalAnalisis.setAverageSleepTime(averageStartTime);
         // finalAnalisis.setAverageWakeTime(averageEndTime);
         // finalAnalisis.setSleepTimeVariability(sleepTimeVariability);
@@ -296,7 +326,11 @@ public class DataTidurService {
         return finalAnalisis;
     }
 
-    // Helper untuk memformat Duration menjadi string pendek (contoh: "1j 30m")
+    /**
+     * Helper untuk memformat Duration menjadi string pendek (contoh: "1j 30m")
+     * @param duration Objek Duration.
+     * @return String format durasi.
+     */
     private String formatDurationShort(Duration duration) {
         long hours = duration.toHours();
         long minutes = duration.toMinutes() % 60;
@@ -304,65 +338,70 @@ public class DataTidurService {
             return String.format("%dh %dm", hours, minutes);
         } else if (hours > 0) {
             return String.format("%dh", hours);
-        } else {
+        } else if (minutes > 0){
             return String.format("%dm", minutes);
+        } else {
+            return "0m"; // Jika durasi 0
         }
     }
 
-
-    // =========================================================================================
-    // METODE LAINNYA
-    // =========================================================================================
-
+    /**
+     * Mendapatkan data tidur mingguan untuk pengguna tertentu dalam rentang tanggal.
+     * @param startDate Tanggal mulai.
+     * @param endDate Tanggal berakhir.
+     * @param pengguna Objek Pengguna.
+     * @return Daftar DataTidur yang cocok.
+     */
+    // Perbaikan: Konversi ke List<DataTidur> karena findByPenggunaAndTanggalBetween mengembalikan List
     public List<DataTidur> getDataTidurMingguan(LocalDate startDate, LocalDate endDate, Pengguna pengguna) {
         return dataTidurRepository.findByPenggunaAndTanggalBetween(pengguna, startDate, endDate);
     }
-
-    // Implementasi metode baru getDataTidurByPengguna
     
-    public List<DataTidur> getDataTidurByPengguna(Pengguna pengguna) {
-        // Ambil semua data tidur untuk pengguna, diurutkan berdasarkan waktu selesai terbaru
-        return dataTidurRepository.findByPenggunaOrderByWaktuSelesaiDesc(pengguna);
-    }
-
-    // Perhatikan: Menggunakan Optional untuk penanganan null yang lebih baik
+    /**
+     * Mencari data tidur terbaru untuk pengguna tertentu.
+     * @param pengguna Objek Pengguna.
+     * @return Objek DataTidur terbaru atau null jika tidak ada.
+     */
     public DataTidur cariTerbaruDataTidur(Pengguna pengguna) {
-        // Pastikan Anda sudah menambahkan findTopByPenggunaOrderByWaktuMulaiDesc di DataTidurRepository
-        Optional<DataTidur> latestRecord = dataTidurRepository.findTopByPenggunaOrderByWaktuMulaiDesc(pengguna);
+        // Pastikan Anda sudah menambahkan findTopByPengguna_IdOrderByWaktuMulaiDesc di DataTidurRepository
+        // dan cari by ID lebih konsisten dengan pola lain
+        Optional<DataTidur> latestRecord = dataTidurRepository.findTopByPengguna_IdOrderByWaktuMulaiDesc(pengguna.getId());
         return latestRecord.orElse(null); // Mengembalikan null jika tidak ada data
     }
 
+    /**
+     * Mendapatkan semua data tidur yang tersimpan di database.
+     * @return Daftar semua objek DataTidur.
+     */
     public List<DataTidur> getAllDataTidur() {
         return dataTidurRepository.findAll();
     }
 
+    /**
+     * Mendapatkan skor tidur berdasarkan tanggal untuk pengguna tertentu.
+     * @param userId ID pengguna.
+     * @return Daftar Object[] berisi tanggal dan skor.
+     */
     public List<Object[]> getSkorByTanggalAndPengguna(Integer userId) {
         return dataTidurRepository.findSkorByTanggalAndPenggunaId(userId);
     }
+    
+    /**
+     * Mengambil semua riwayat tidur untuk pengguna tertentu, diurutkan dari yang paling baru.
+     * Ini adalah metode yang akan dipanggil oleh DataTidurApiController.
+     * @param pengguna Objek Pengguna.
+     * @return Daftar DataTidur yang diurutkan.
+     */
+    public List<DataTidur> findByPenggunaOrderByWaktuSelesaiDesc(Pengguna pengguna) {
+        // Menggunakan method repository findByPengguna_IdOrderByWaktuSelesaiDesc
+        return dataTidurRepository.findByPengguna_IdOrderByWaktuSelesaiDesc(pengguna.getId());
+    }
 
-    // Implementasi metode tambahManual
-    public void tambahManual(LocalDateTime startTime, LocalDateTime endTime, Pengguna pengguna) {
-        LocalDateTime adjustedStartTime = startTime.plusHours(7);
-        LocalDateTime adjustedEndTime = endTime.plusHours(7);
-
-        DataTidur manualDt = new DataTidur(); // <-- PENTING: Membuat instance baru
-        manualDt.setWaktuMulai(adjustedStartTime);
-        manualDt.setWaktuSelesai(adjustedEndTime);
-        manualDt.setIdPengguna(pengguna);
-        manualDt.setTanggal(adjustedEndTime.toLocalDate());
-
-        manualDt.hitungDurasi();
-        int usia = 0;
-        if (pengguna.getTanggalLahir() != null) {
-            usia = Period.between(pengguna.getTanggalLahir(), ZonedDateTime.now(zone).toLocalDate()).getYears();
-        }
-        manualDt.hitungSkor(usia);
-        
-        // Pengecekan duplikat sebelum menyimpan (controller akan menangani IllegalArgumentException)
-        if (cekDuplikatDataTidur(manualDt, pengguna)) {
-            throw new IllegalArgumentException("Data tidur untuk tanggal ini sudah ada.");
-        }
-        
-        dataTidurRepository.save(manualDt);
+    public void tambah(DataTidur dt, Pengguna pengguna){
+        dt.setIdPengguna(pengguna);
+        dt.setTanggal(dt.getWaktuSelesai().toLocalDate());
+        dt.hitungDurasi();
+        dt.hitungSkor(Period.between(pengguna.getTanggalLahir(),  ZonedDateTime.now(zone).toLocalDate()).getYears());
+        dataTidurRepository.save(dt);
     }
 }

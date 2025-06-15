@@ -13,7 +13,7 @@ public class DataTidur {
     private LocalDateTime waktuSelesai;
     private LocalDate tanggal;
     private LocalTime durasi;
-    private int skor;
+    private Integer skor;
 
     @ManyToOne
     @JoinColumn(name = "pengguna_id", nullable = false)
@@ -34,8 +34,8 @@ public class DataTidur {
     public LocalTime getDurasi() {return durasi;}
     public void setDurasi(LocalTime durasi) {this.durasi = durasi;}
 
-    public int getSkor() {return skor;}
-    public void setSkor(int skor) {this.skor = skor;}
+    public Integer getSkor() {return skor;}
+    public void setSkor(Integer skor) {this.skor = skor;}
     
     public void hitungDurasi() {
         LocalDateTime adjustedWaktuSelesai = waktuSelesai;
